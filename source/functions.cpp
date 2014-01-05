@@ -30,24 +30,19 @@ void getProperty(string line1, int s)
 			switch (s)
 			{
 				case 1:
-				{
 					line = line.substr(25,5);
             				fprintf(stdout,"Android Version: %s\n",line.c_str());
             				break;
-				}
 				case 2:
-				{
 					len = line.length();
 					line = line.substr(14,len-14);
 					fprintf(stdout,"Build Date: %s\n",line.c_str());
 					break;
-				}
 				case 3:
-				{
 					len = line.length();
 					line = line.substr(14,len-14);
 					fprintf(stdout,"Developer: %s\n",line.c_str());
-				}
+					break;
 				default: break;
         		}
 			break;
