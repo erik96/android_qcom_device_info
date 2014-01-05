@@ -1,4 +1,5 @@
 #include "functions.h"
+#include <cstdlib>
 
 using namespace std;
 
@@ -32,7 +33,7 @@ void getProperty(string line1, int s)
 				case 1:
 				{
 					line = line.substr(25,5);
-            				fprintf(stdout,"%s %s \n", "Android Version:",line.c_str());
+            				fprintf(stdout,"Android Version: %s",line.c_str());
 					found = true;
             				break;
 				}
@@ -40,7 +41,7 @@ void getProperty(string line1, int s)
 				{
 					len = line.length();
 					line = line.substr(14,len-14);
-					fprintf(stdout,"%s %s \n", "Build Date:",line.c_str());
+					fprintf(stdout,"Build Date: %s",line.c_str());
 					found = true;
 					break;
 				}
@@ -48,7 +49,7 @@ void getProperty(string line1, int s)
 				{
 					len = line.length();
 					line = line.substr(14,len-14);
-					fprintf(stdout,"%s %s \n", "Developer:",line.c_str());
+					fprintf(stdout,"Developer: %s",line.c_str());
 					found = true;
 				}
 				default: break;
@@ -65,24 +66,29 @@ void getCPUInfo()
 	ifstream fp;
 	string Printer;
 
+	ifstream in("/proc/cpuinfo");
+	string buff((istreambuf_iterator<char>(in)), 
+    	istreambuf_iterator<char>());
+	fprintf(stdout,"CPU Informations: \n%s",buff.c_str());
+
 	fp.open("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq");
 	getline(fp,Printer);
-	fprintf(stdout,"%s %s \n","Current CPU Freq:",Printer.c_str());
+	fprintf(stdout,"\n","Current CPU Freq: %s\n",Printer.c_str());
 	fp.close();
 
 	fp.open("/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq");
 	getline(fp,Printer);
-	fprintf(stdout,"%s %s \n","Current Max CPU Freq:",Printer.c_str());
+	fprintf(stdout,"Current Max CPU Freq: %s\n",Printer.c_str());
 	fp.close();
 
 	fp.open("/sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq");
 	getline(fp,Printer);
-	fprintf(stdout,"%s %s \n","Current Min CPU Freq:",Printer.c_str());
+	fprintf(stdout,"Current Min CPU Freq: %s\n",Printer.c_str());
 	fp.close();	
 	
 	fp.open("/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor");
 	getline(fp,Printer);
-	fprintf(stdout,"%s %s \n","Current CPU Governor:",Printer.c_str());
+	fprintf(stdout,"Current CPU Governor: %s\n",Printer.c_str());
 	fp.close();
 }
 

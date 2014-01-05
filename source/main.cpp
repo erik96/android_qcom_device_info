@@ -3,7 +3,7 @@
 
 using namespace std;
 
-const char ver[] = "0.1";
+const char ver[] = "0.2_pre-alpha";
 
 void menu(void);
 
