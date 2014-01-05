@@ -3,7 +3,7 @@
 
 using namespace std;
 
-const char ver[] = "0.2_pre-alpha";
+const char ver[] = "0.3_pre-alpha";
 
 void menu(void);
 
@@ -11,26 +11,38 @@ int main ()
 {
 
 	int ch;
-
 	menu();
-	cin>>ch;
 
-	switch (ch)
+	do
 	{
-		case 1:
+		cin>>ch;
+
+		switch (ch)
 		{
-			getProperty("ro.build.version.release",1);
-			getProperty("ro.build.date",2);
-			getProperty("ro.build.user",3);
-			break;
+			case 0:
+				fprintf(stdout, "Bye-Bye !");
+				break;
+			case 1:
+				getProperty("ro.build.version.release",1);
+				getProperty("ro.build.date",2);
+				getProperty("ro.build.user",3);
+				break;
+			case 2:
+				getCPUInfo();
+				break;
+			case 3:
+				getBatteryInfo();
+				break;
+			case 4:
+				vddLevels();
+				break;
+			default: 
+				fprintf(stdout, "Unknown value");
+				break;
 		}
-		case 2:
-		{
-			getCPUInfo();
-			break;
-		}
-		default: break;
 	}
+
+	while (ch != 0);
 
 	return 0;
 
@@ -43,5 +55,8 @@ void menu()
 	fprintf(stdout, "Ariesve Device Info v%s by educk@XDA-Dev.com\n",ver);
 	fprintf(stdout, "Options:\n"
 			"1: Get ROM Information\n" 
-			"2: Get CPU Information\n");
+			"2: Get CPU Information\n"
+			"3: Get Battery Information\n"
+			"4: Get Voltage Table\n"
+			"0: Quit\n");
 }

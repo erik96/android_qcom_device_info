@@ -6,7 +6,6 @@ using namespace std;
 void getProperty(string line1, int s)
 {
 	string line;
-	bool found = false;
 	int len;
 
 	ifstream fp;
@@ -33,24 +32,21 @@ void getProperty(string line1, int s)
 				case 1:
 				{
 					line = line.substr(25,5);
-            				fprintf(stdout,"Android Version: %s",line.c_str());
-					found = true;
+            				fprintf(stdout,"Android Version: %s\n",line.c_str());
             				break;
 				}
 				case 2:
 				{
 					len = line.length();
 					line = line.substr(14,len-14);
-					fprintf(stdout,"Build Date: %s",line.c_str());
-					found = true;
+					fprintf(stdout,"Build Date: %s\n",line.c_str());
 					break;
 				}
 				case 3:
 				{
 					len = line.length();
 					line = line.substr(14,len-14);
-					fprintf(stdout,"Developer: %s",line.c_str());
-					found = true;
+					fprintf(stdout,"Developer: %s\n",line.c_str());
 				}
 				default: break;
         		}
@@ -92,4 +88,66 @@ void getCPUInfo()
 	fp.close();
 }
 
+void vddLevels()
+{
 
+	ifstream in("sys/devices/system/cpu/cpu0/cpufreq/vdd_levels");
+	if (!in)
+	{
+		fprintf(stderr,"Your kernel doesn't support VDD Sysfs interface");
+		return;
+	}
+
+	string buff((istreambuf_iterator<char>(in)), 
+    	istreambuf_iterator<char>());
+	fprintf(stdout,"Voltage Table: \n%s",buff.c_str());
+}
+	
+
+void getBatteryInfo()
+{
+
+	ifstream fp;
+	string Printer;
+
+	fp.open("/sys/class/power_supply/battery/status");
+	getline(fp,Printer);
+	fprintf(stdout,"Battery Status: %s\n",Printer.c_str());
+	fp.close();
+
+	fp.open("/sys/class/power_supply/battery/technology");
+	getline(fp,Printer);
+	fprintf(stdout,"Battery Technology: %s\n",Printer.c_str());
+	fp.close();
+
+	fp.open("/sys/class/power_supply/battery/capacity");
+	getline(fp,Printer);
+	fprintf(stdout,"Battery Level: %s\n",Printer.c_str());
+	fp.close();
+
+	fp.open("/sys/class/power_supply/battery/voltage_now");
+	getline(fp,Printer);
+	fprintf(stdout,"Current battery voltage: %s\n",Printer.c_str());
+	fp.close();
+
+	fp.open("/sys/class/power_supply/battery/voltage_max_design");
+	getline(fp,Printer);
+	fprintf(stdout,"Design Maximal Voltage: %s\n",Printer.c_str());
+	fp.close();
+
+	fp.open("/sys/class/power_supply/battery/voltage_min_design");
+	getline(fp,Printer);
+	fprintf(stdout,"Design Minimal Voltage: %s\n",Printer.c_str());
+	fp.close();
+
+	fp.open("/sys/class/power_supply/battery/health");
+	getline(fp,Printer);
+	fprintf(stdout,"Battery Health: %s\n",Printer.c_str());
+	fp.close();
+
+	fp.open("/sys/class/power_supply/battery/batt_temp");
+	getline(fp,Printer);
+	fprintf(stdout,"Battery Temperature: %s\n",Printer.c_str());
+	fp.close();
+
+}
