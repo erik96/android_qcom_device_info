@@ -1,5 +1,6 @@
 #include "functions.h"
 #include <cstdlib>
+#include <sys/stat.h>
 
 using namespace std;
 
@@ -43,6 +44,7 @@ void getProperty(string line1, int s)
 					line = line.substr(14,len-14);
 					fprintf(stdout,"Developer: %s\n",line.c_str());
 					break;
+
 				default: break;
         		}
 			break;
@@ -54,13 +56,14 @@ void getProperty(string line1, int s)
 
 void getCPUInfo()
 {
+	
 	ifstream fp;
-	string Printer;
+        string Printer;
 
-	ifstream in("/proc/cpuinfo");
-	string buff((istreambuf_iterator<char>(in)), 
-    	istreambuf_iterator<char>());
-	fprintf(stdout,"CPU Informations: \n%s",buff.c_str());
+        ifstream in("/proc/cpuinfo");
+        string buff((istreambuf_iterator<char>(in)),
+	istreambuf_iterator<char>());
+        fprintf(stdout,"CPU Informations: \n%s",buff.c_str());
 
 	fp.open("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq");
 	getline(fp,Printer);
@@ -145,4 +148,15 @@ void getBatteryInfo()
 	fprintf(stdout,"Battery Temperature: %s\n",Printer.c_str());
 	fp.close();
 
+}
+
+void KernelInfo()
+{
+	ifstream fp;
+
+	ifstream in("/proc/version");
+	string buff((istreambuf_iterator<char>(in)), 
+    	istreambuf_iterator<char>());
+	fprintf(stdout,"Linux Kernel Informations: \n%s",buff.c_str());
+	
 }

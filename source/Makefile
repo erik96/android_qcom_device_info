@@ -1,7 +1,7 @@
 CFLAGS = -static -march=armv5 -O2
 
 all: main.cpp
-	$(CC) -o arm main.cpp functions.cpp $(CFLAGS)
+	$(CC) -o dinfo main.cpp functions.cpp $(CFLAGS)
 
 clean:
-	rm -f arm arm.o
+	rm -f dinfo dinfo.o

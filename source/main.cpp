@@ -3,7 +3,7 @@
 
 using namespace std;
 
-const char ver[] = "0.3_pre-alpha";
+const char ver[] = "0.4_pre-alpha";
 
 void menu(void);
 
@@ -20,7 +20,7 @@ int main ()
 		switch (ch)
 		{
 			case 0:
-				fprintf(stdout, "Bye-Bye !");
+				fprintf(stdout, "Bye-Bye !\n");
 				break;
 			case 1:
 				getProperty("ro.build.version.release",1);
@@ -35,6 +35,9 @@ int main ()
 				break;
 			case 4:
 				vddLevels();
+				break;
+			case 5:
+				KernelInfo();
 				break;
 			default: 
 				fprintf(stdout, "Unknown value");
@@ -58,5 +61,6 @@ void menu()
 			"2: Get CPU Information\n"
 			"3: Get Battery Information\n"
 			"4: Get Voltage Table\n"
+			"5: Get Linux Kernel Informations\n"
 			"0: Quit\n");
 }

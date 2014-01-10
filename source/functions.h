@@ -9,3 +9,4 @@ void getProperty(string line1, int s);
 void getCPUInfo();
 void getBatteryInfo();
 void vddLevels();
+void KernelInfo();
