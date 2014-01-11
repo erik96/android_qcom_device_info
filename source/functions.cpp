@@ -1,8 +1,9 @@
-#include "functions.h"
 #include <cstdlib>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <cstdio>
+#include <dirent.h>
+
+#include "functions.h"
 
 using namespace std;
 
@@ -198,4 +199,29 @@ void getLogs()
   	}
 
 	fprintf(stdout, "DONE !\n");
+}
+
+void getVMStats()
+{
+	DIR *dir;
+	dirent *pdir;
+	char buff[512];
+	ifstream in;
+	int val, i = 0;
+
+	dir = opendir("/proc/sys/vm");
+	
+	while(pdir = readdir(dir))
+	{
+		++i;
+		sprintf(buff, "/proc/sys/vm/%s", pdir->d_name);
+		if(i>2)
+		{
+			in.open(buff);
+			in>>val;	
+			cout << pdir->d_name <<": "<<val<<"\n";
+			in.close();
+		}
+	}
+	closedir(dir);
 }

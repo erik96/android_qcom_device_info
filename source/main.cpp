@@ -4,7 +4,7 @@
 
 using namespace std;
 
-const char ver[] = "0.5_pre-alpha";
+const char ver[] = "0.6_alpha";
 
 void menu(void);
 
@@ -43,6 +43,9 @@ int main ()
 			case 6:
 				getLogs();
 				break;
+			case 7:
+				getVMStats();
+				break;
 			default: 
 				fprintf(stdout, "Unknown value");
 				break;
@@ -67,5 +70,6 @@ void menu()
 			"4: Get Voltage Table\n"
 			"5: Get Linux Kernel Informations\n"
 			"6: Dump logcat and last_kmsg\n"
+			"7: Get VM Stats\n"
 			"0: Quit\n");
 }

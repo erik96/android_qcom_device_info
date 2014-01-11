@@ -11,3 +11,4 @@ void getBatteryInfo();
 void getVddLevels();
 void getKernelInfo();
 void getLogs();
+void getVMStats();
