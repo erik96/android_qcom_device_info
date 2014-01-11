@@ -4,7 +4,7 @@
 
 using namespace std;
 
-const char ver[] = "0.4.5_pre-alpha";
+const char ver[] = "0.5_pre-alpha";
 
 void menu(void);
 
@@ -66,6 +66,6 @@ void menu()
 			"3: Get Battery Information\n"
 			"4: Get Voltage Table\n"
 			"5: Get Linux Kernel Informations\n"
-			"6: Dump logcat and last_kmsg[WIP]\n"
+			"6: Dump logcat and last_kmsg\n"
 			"0: Quit\n");
 }

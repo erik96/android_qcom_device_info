@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <cstdio>
 
 using namespace std;
 
@@ -93,7 +94,7 @@ void getVddLevels()
 	ifstream in("sys/devices/system/cpu/cpu0/cpufreq/vdd_levels");
 	if (!in)
 	{
-		fprintf(stderr,"Your kernel doesn't support VDD Sysfs interface");
+		fprintf(stderr,"Your kernel doesn't support VDD Sysfs interface\n");
 		return;
 	}
 
@@ -153,49 +154,48 @@ void getBatteryInfo()
 
 void getKernelInfo()
 {
-	ifstream fp;
 
 	ifstream in("/proc/version");
 	string buff((istreambuf_iterator<char>(in)), 
     	istreambuf_iterator<char>());
 	fprintf(stdout,"Linux Kernel Informations: \n%s",buff.c_str());
+
+	in.close();
 	
 }
 
 static void cpy (const char *infile, const char *outfile)
 {
 	ifstream  src(infile, ios::binary);
-    	ofstream  dst(outfile,   ios::binary);
 
 	if (src)
 	{
+		ofstream  dst(outfile,   ios::binary);
 		dst << src.rdbuf();
+		dst.close();
+		src.close();
 		return;
 	}
 	else
 	{
-		fprintf(stderr, "Input file not found");
+		fprintf(stderr, "%s not found\n", infile);
+		src.close();
 		return;
 	}
 }
 
 void getLogs()
 {
+
 	int result_code = mkdir("/sdcard/logs", 0770);
 	cpy("/proc/last_kmsg", "/sdcard/logs/last_kmsg");
-
-	system("system/bin/logcat -v time -d > /sdcard/logcat.txt");
+	
+	pid_t pid = fork();
+  	if (pid == 0) 
+	{
+    		execl("/system/bin/logcat", "logcat", "-v", "threadtime", "-d", "-t", "1000", "-f", "/sdcard/logs/log.txt", NULL);
+   		_exit(EXIT_FAILURE);
+  	}
 
 	fprintf(stdout, "DONE !\n");
 }
-
-
-
-
-
-
-
-
-
-
-
