@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <cstdlib>
 #include <sys/stat.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -86,7 +87,7 @@ void getCPUInfo()
 	fp.close();
 }
 
-void vddLevels()
+void getVddLevels()
 {
 
 	ifstream in("sys/devices/system/cpu/cpu0/cpufreq/vdd_levels");
@@ -150,7 +151,7 @@ void getBatteryInfo()
 
 }
 
-void KernelInfo()
+void getKernelInfo()
 {
 	ifstream fp;
 
@@ -160,3 +161,41 @@ void KernelInfo()
 	fprintf(stdout,"Linux Kernel Informations: \n%s",buff.c_str());
 	
 }
+
+static void cpy (const char *infile, const char *outfile)
+{
+	ifstream  src(infile, ios::binary);
+    	ofstream  dst(outfile,   ios::binary);
+
+	if (src)
+	{
+		dst << src.rdbuf();
+		return;
+	}
+	else
+	{
+		fprintf(stderr, "Input file not found");
+		return;
+	}
+}
+
+void getLogs()
+{
+	int result_code = mkdir("/sdcard/logs", 0770);
+	cpy("/proc/last_kmsg", "/sdcard/logs/last_kmsg");
+
+	system("system/bin/logcat -v time -d > /sdcard/logcat.txt");
+
+	fprintf(stdout, "DONE !\n");
+}
+
+
+
+
+
+
+
+
+
+
+

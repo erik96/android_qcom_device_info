@@ -1,9 +1,10 @@
 #include "functions.h"
 #include <cstdio>
+#include <cstdlib>
 
 using namespace std;
 
-const char ver[] = "0.4_pre-alpha";
+const char ver[] = "0.4.5_pre-alpha";
 
 void menu(void);
 
@@ -34,10 +35,13 @@ int main ()
 				getBatteryInfo();
 				break;
 			case 4:
-				vddLevels();
+				getVddLevels();
 				break;
 			case 5:
-				KernelInfo();
+				getKernelInfo();
+				break;
+			case 6:
+				getLogs();
 				break;
 			default: 
 				fprintf(stdout, "Unknown value");
@@ -62,5 +66,6 @@ void menu()
 			"3: Get Battery Information\n"
 			"4: Get Voltage Table\n"
 			"5: Get Linux Kernel Informations\n"
+			"6: Dump logcat and last_kmsg[WIP]\n"
 			"0: Quit\n");
 }
