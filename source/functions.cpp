@@ -1,16 +1,20 @@
+#include <fstream>
+#include <cstring>
 #include <cstdlib>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <dirent.h>
+#include <sstream>
+#include <iostream>
 
 #include "functions.h"
 
 using namespace std;
 
-void getProperty(string line1, int s)
+void getProperty(string line1, unsigned short s)
 {
 	string line;
-	int len;
+	unsigned short len;
 
 	ifstream fp;
 	fp.open("/system/build.prop");
@@ -187,8 +191,8 @@ static void cpy (const char *infile, const char *outfile)
 
 void getLogs()
 {
-
-	int result_code = mkdir("/sdcard/logs", 0770);
+	//int result code = mkdir("/sdcard/logs", 0770);
+	mkdir("/sdcard/logs", 0770);
 	cpy("/proc/last_kmsg", "/sdcard/logs/last_kmsg");
 	
 	pid_t pid = fork();
@@ -198,16 +202,17 @@ void getLogs()
    		_exit(EXIT_FAILURE);
   	}
 
-	fprintf(stdout, "DONE !\n");
+	fprintf(stdout, "Logs saved to /sdcard/logs !\n");
 }
 
 void getVMStats()
 {
 	DIR *dir;
 	dirent *pdir;
-	char buff[512];
+	char buff[128];
 	ifstream in;
-	int val, i = 0;
+	int val;
+	unsigned short i = 0;
 
 	dir = opendir("/proc/sys/vm");
 	
@@ -224,4 +229,128 @@ void getVMStats()
 		}
 	}
 	closedir(dir);
+}
+
+static inline int kb_to_mb(int t)
+{
+	return (t/1024);
+}
+
+void getRAMInfo()
+{
+	int t;
+	char temp[64];
+	string Printer;
+	ifstream in;
+
+	in.open("/proc/meminfo");
+
+	for(int i=1; i<=7; i++)
+	{
+		getline(in,Printer);
+
+		istringstream ss(Printer);
+		ss>>temp>>t;
+		fprintf(stdout, "%s %d MB\n",temp,kb_to_mb(t));
+	}
+	in.close();
+}
+
+void getDiskInfo()
+{
+
+	ofstream script("/data/local/tmp.sh");
+	const char tmp[] = "df &>/data/local/data.txt";
+
+	script<<tmp;
+	script.close();
+
+	pid_t pid = fork();
+  	if (pid == 0) 
+	{
+    		execl("/system/bin/chmod", "chmod", "0770", "/data/local/tmp.sh", NULL);
+   		_exit(EXIT_FAILURE);
+  	}
+
+	pid = fork();
+	if (pid == 0) 
+	{
+    		execl("/system/bin/sh", "sh", "/data/local/tmp.sh", NULL);
+   		_exit(EXIT_FAILURE);
+  	}
+
+	ifstream in;
+	in.open("/data/local/data.txt");
+	string line;
+
+	getline(in,line);
+	fprintf(stdout,"%s\n",line.c_str());
+
+//TODO: OPTIMIZE THIS :
+
+	size_t pos;
+	while (in.good())
+	{
+		getline(in,line);
+		pos = line.find("/system");
+
+		if(pos!=string::npos)
+        	{
+			fprintf(stdout,"%s\n",line.c_str());
+			break;
+		}
+ 	 }
+
+	while (in.good())
+	{
+		getline(in,line);
+		pos = line.find("/cache");
+
+		if(pos!=string::npos)
+        	{
+			fprintf(stdout,"%s\n",line.c_str());
+			break;
+		}
+ 	 }
+
+	while (in.good())
+	{
+		getline(in,line);
+		pos = line.find("/data");
+
+		if(pos!=string::npos)
+        	{
+			fprintf(stdout,"%s\n",line.c_str());
+			break;
+		}
+ 	 }
+
+	while (in.good())
+	{
+		getline(in,line);
+		pos = line.find("/storage/sdcard1");
+
+		if(pos!=string::npos)
+        	{
+			fprintf(stdout,"%s\n",line.c_str());
+			break;
+		}
+ 	 }
+
+	
+	while (in.good())
+	{
+		getline(in,line);
+		pos = line.find("/storage/sdcard0");
+
+		if(pos!=string::npos)
+        	{
+			fprintf(stdout,"%s\n",line.c_str());
+			break;
+		}
+ 	 }
+
+
+	in.close();
+
 }

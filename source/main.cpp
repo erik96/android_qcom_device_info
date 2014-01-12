@@ -1,17 +1,19 @@
-#include "functions.h"
 #include <cstdio>
 #include <cstdlib>
+#include <iostream>
+
+#include "functions.h"
 
 using namespace std;
 
-const char ver[] = "0.6_alpha";
+const char ver[] = "0.7_beta";
 
-void menu(void);
+static void menu(void);
 
 int main ()
 {
 
-	int ch;
+	unsigned short ch;
 	menu();
 
 	do
@@ -46,8 +48,14 @@ int main ()
 			case 7:
 				getVMStats();
 				break;
+			case 8:
+				getRAMInfo();
+				break;
+			case 9:
+				getDiskInfo();
+				break;
 			default: 
-				fprintf(stdout, "Unknown value");
+				fprintf(stdout, "Unknown value\n");
 				break;
 		}
 	}
@@ -59,7 +67,7 @@ int main ()
 
 }
 
-void menu()
+static void menu()
 {
 
 	fprintf(stdout, "Ariesve Device Info v%s by educk@XDA-Dev.com\n",ver);
@@ -69,7 +77,9 @@ void menu()
 			"3: Get Battery Information\n"
 			"4: Get Voltage Table\n"
 			"5: Get Linux Kernel Informations\n"
-			"6: Dump logcat and last_kmsg\n"
+			"6: Dump logcat and last_kmsg (store them to /sdcard/logs/)\n"
 			"7: Get VM Stats\n"
+			"8: Get RAM Informations\n"
+			"9: Get Disk Informations\n"
 			"0: Quit\n");
 }
