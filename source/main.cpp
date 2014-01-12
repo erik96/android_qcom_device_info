@@ -6,9 +6,15 @@
 
 using namespace std;
 
-const char ver[] = "0.7_beta";
+const char ver[] = "0.7.1_beta";
 
 static void menu(void);
+
+static void clear()
+{
+	remove("/data/local/data.txt");
+	remove("/data/local/tmp.sh");
+}
 
 int main ()
 {
@@ -62,6 +68,7 @@ int main ()
 
 	while (ch != 0);
 
+	clear();
 	return 0;
 
 
@@ -80,6 +87,6 @@ static void menu()
 			"6: Dump logcat and last_kmsg (store them to /sdcard/logs/)\n"
 			"7: Get VM Stats\n"
 			"8: Get RAM Informations\n"
-			"9: Get Disk Informations\n"
+			"9: Get Disk Informations [WIP]\n"
 			"0: Quit\n");
 }

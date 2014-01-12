@@ -260,7 +260,7 @@ void getDiskInfo()
 {
 
 	ofstream script("/data/local/tmp.sh");
-	const char tmp[] = "df &>/data/local/data.txt";
+	string tmp("df &>/data/local/data.txt");
 
 	script<<tmp;
 	script.close();
@@ -286,71 +286,61 @@ void getDiskInfo()
 	getline(in,line);
 	fprintf(stdout,"%s\n",line.c_str());
 
-//TODO: OPTIMIZE THIS :
-
 	size_t pos;
-	while (in.good())
-	{
-		getline(in,line);
-		pos = line.find("/system");
-
-		if(pos!=string::npos)
-        	{
-			fprintf(stdout,"%s\n",line.c_str());
-			break;
-		}
- 	 }
+	int len;
+	bool system = false;
+	bool cache = false;
+	bool data = false;
+	bool sdcard1 = false;
+	bool sdcard0 = false;
 
 	while (in.good())
 	{
 		getline(in,line);
-		pos = line.find("/cache");
-
-		if(pos!=string::npos)
-        	{
-			fprintf(stdout,"%s\n",line.c_str());
-			break;
+		if (!system) {
+			pos = line.find("/system");
+			if(pos!=string::npos) {
+				line.replace(0,7,"System:");
+				fprintf(stdout,"%s\n",line.c_str());
+				system = true;
+			}
+		} else if (!cache) {
+			pos = line.find("/cache");
+			if(pos!=string::npos) {
+				line.replace(0,6,"Cache:");
+				fprintf(stdout,"%s\n",line.c_str());
+				cache = true;
+			}
+		} else if (!data) {
+			pos = line.find("/data");
+			if(pos!=string::npos) {
+				line.replace(0,5,"Data:");
+				fprintf(stdout,"%s\n",line.c_str());
+				data = true;
+			}
+		} else if (!sdcard1) {
+			pos = line.find("/sdcard1");
+			if(pos!=string::npos) {
+				istringstream ss(line);
+				ss>>tmp;
+				len = tmp.length();
+				line.replace(0,len,"External SD:\t    "); //TODO Fix alignment
+				fprintf(stdout,"%s\n",line.c_str());
+				sdcard1 = true;
+			}
+		} else if (!sdcard0) {
+			pos = line.find("/sdcard0");
+			if(pos!=string::npos) {
+				line.replace(0,len,"Internal SD:\t    "); //TODO: Fix alignment
+				fprintf(stdout,"%s\n",line.c_str());
+				sdcard0 = true;
+			}
 		}
- 	 }
-
-	while (in.good())
-	{
-		getline(in,line);
-		pos = line.find("/data");
-
-		if(pos!=string::npos)
-        	{
-			fprintf(stdout,"%s\n",line.c_str());
+		
+		if (system && cache && data && sdcard1 && sdcard0)
 			break;
-		}
- 	 }
-
-	while (in.good())
-	{
-		getline(in,line);
-		pos = line.find("/storage/sdcard1");
-
-		if(pos!=string::npos)
-        	{
-			fprintf(stdout,"%s\n",line.c_str());
-			break;
-		}
- 	 }
-
-	
-	while (in.good())
-	{
-		getline(in,line);
-		pos = line.find("/storage/sdcard0");
-
-		if(pos!=string::npos)
-        	{
-			fprintf(stdout,"%s\n",line.c_str());
-			break;
-		}
- 	 }
+	}
 
 
 	in.close();
-
 }
