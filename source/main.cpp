@@ -1,12 +1,14 @@
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
+#include <fstream>
+#include <unistd.h>
 
 #include "functions.h"
 
 using namespace std;
 
-const char ver[] = "0.7.1_beta";
+const char ver[] = "0.7.2_beta";
 
 static void menu(void);
 
@@ -14,6 +16,23 @@ static void clear()
 {
 	remove("/data/local/data.txt");
 	remove("/data/local/tmp.sh");
+}
+
+static bool FileExists(const char *filename)
+{
+	bool ret;
+	ifstream in(filename);
+
+	if (in) {
+		ret = true;
+	}
+	else {
+		ret = false;
+	}
+
+	in.close();
+
+	return ret;
 }
 
 int main ()
@@ -57,8 +76,9 @@ int main ()
 			case 8:
 				getRAMInfo();
 				break;
+
 			case 9:
-				getDiskInfo();
+    				getDiskInfo();
 				break;
 			default: 
 				fprintf(stdout, "Unknown value\n");
@@ -87,6 +107,6 @@ static void menu()
 			"6: Dump logcat and last_kmsg (store them to /sdcard/logs/)\n"
 			"7: Get VM Stats\n"
 			"8: Get RAM Informations\n"
-			"9: Get Disk Informations [WIP]\n"
+			"9: Get Disk Informations\n"
 			"0: Quit\n");
 }

@@ -256,89 +256,97 @@ void getRAMInfo()
 	in.close();
 }
 
-void getDiskInfo()
+static void ExcuteScript(string content)
 {
-
 	ofstream script("/data/local/tmp.sh");
-	string tmp("df &>/data/local/data.txt");
 
-	script<<tmp;
+	script<<content;
 	script.close();
 
 	pid_t pid = fork();
   	if (pid == 0) 
 	{
     		execl("/system/bin/chmod", "chmod", "0770", "/data/local/tmp.sh", NULL);
-   		_exit(EXIT_FAILURE);
-  	}
+		_exit(EXIT_FAILURE);
+	}
 
 	pid = fork();
-	if (pid == 0) 
+	if (pid == 0)
 	{
-    		execl("/system/bin/sh", "sh", "/data/local/tmp.sh", NULL);
-   		_exit(EXIT_FAILURE);
-  	}
+		execl("/system/bin/sh", "sh", "/data/local/tmp.sh", NULL);
+		_exit(EXIT_FAILURE);
+	}
+
+	usleep(600000); //Wait for the script execution
+	return;
+}
+
+void getDiskInfo()
+{
+	ExcuteScript("df &>/data/local/data.txt");
 
 	ifstream in;
 	in.open("/data/local/data.txt");
+	
 	string line;
+	char temp[64];
+	const char *system = "/system";
+	const char *data = "/data";
+	const char *cache = "/cache";
+	const char *sdcard1 = "/storage/sdcard1";
+	const char *sdcard0 = "/storage/sdcard0";
+
+	bool System = false;
+	bool Data = false;
+	bool Cache = false;
+	bool SDcard1 = false;
+	bool SDcard0 = false;
+	
+	
 
 	getline(in,line);
 	fprintf(stdout,"%s\n",line.c_str());
 
-	size_t pos;
-	int len;
-	bool system = false;
-	bool cache = false;
-	bool data = false;
-	bool sdcard1 = false;
-	bool sdcard0 = false;
-
+	
 	while (in.good())
 	{
 		getline(in,line);
-		if (!system) {
-			pos = line.find("/system");
-			if(pos!=string::npos) {
-				line.replace(0,7,"System:");
-				fprintf(stdout,"%s\n",line.c_str());
-				system = true;
-			}
-		} else if (!cache) {
-			pos = line.find("/cache");
-			if(pos!=string::npos) {
-				line.replace(0,6,"Cache:");
-				fprintf(stdout,"%s\n",line.c_str());
-				cache = true;
-			}
-		} else if (!data) {
-			pos = line.find("/data");
-			if(pos!=string::npos) {
-				line.replace(0,5,"Data:");
-				fprintf(stdout,"%s\n",line.c_str());
-				data = true;
-			}
-		} else if (!sdcard1) {
-			pos = line.find("/sdcard1");
-			if(pos!=string::npos) {
-				istringstream ss(line);
-				ss>>tmp;
-				len = tmp.length();
-				line.replace(0,len,"External SD:\t    "); //TODO Fix alignment
-				fprintf(stdout,"%s\n",line.c_str());
-				sdcard1 = true;
-			}
-		} else if (!sdcard0) {
-			pos = line.find("/sdcard0");
-			if(pos!=string::npos) {
-				line.replace(0,len,"Internal SD:\t    "); //TODO: Fix alignment
-				fprintf(stdout,"%s\n",line.c_str());
-				sdcard0 = true;
-			}
+		istringstream ss(line);
+		ss>>temp;
+
+		if (!strcmp(temp,system) && !System) {
+			line.replace(0,strlen(system),"System:");
+			fprintf(stdout,"%s\n",line.c_str());
+			System = true;
+			continue;
 		}
-		
-		if (system && cache && data && sdcard1 && sdcard0)
-			break;
+		if (!strcmp(temp,data) && !Data) {
+			line.replace(0,strlen(data),"Data:");
+			fprintf(stdout,"%s\n",line.c_str());
+			Data = true;
+			continue;
+		}
+		if (!strcmp(temp,cache) && !Cache) {
+			line.replace(0,strlen(cache),"Cache:");
+			fprintf(stdout,"%s\n",line.c_str());
+			Cache = true;
+			continue;
+		}
+		if (!strcmp(temp,sdcard1) && !SDcard1) {
+			line.replace(0,strlen(sdcard1),"External SD:    ");
+			fprintf(stdout,"%s\n",line.c_str());
+			SDcard1 = true;
+			continue;
+		}
+		if (!strcmp(temp,sdcard0) && !SDcard0) {
+			line.replace(0,strlen(sdcard0),"Internal SD:    ");
+			fprintf(stdout,"%s\n",line.c_str());
+			SDcard0 = true;
+			continue;
+		}
+
+
+
 	}
 
 
