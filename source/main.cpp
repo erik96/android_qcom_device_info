@@ -2,7 +2,6 @@
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
-#include <unistd.h>
 
 #include "functions.h"
 

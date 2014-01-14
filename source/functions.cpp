@@ -302,12 +302,9 @@ void getDiskInfo()
 	bool SDcard1 = false;
 	bool SDcard0 = false;
 	
-	
-
 	getline(in,line);
 	fprintf(stdout,"%s\n",line.c_str());
 
-	
 	while (in.good())
 	{
 		getline(in,line);
@@ -344,11 +341,7 @@ void getDiskInfo()
 			SDcard0 = true;
 			continue;
 		}
-
-
-
 	}
-
 
 	in.close();
 }
