@@ -60,6 +60,26 @@ void getProperty(string line1, unsigned short s)
 
 }
 
+static string BuffFile(const char *infile)
+{
+	ifstream in(infile);
+
+	string buff((istreambuf_iterator<char>(in)),
+	istreambuf_iterator<char>());
+	in.close();
+
+	return buff;
+}
+
+static string LineFile(const char *infile)
+{
+	string ret;
+	ifstream in(infile);
+	getline(in,ret);
+
+	return ret;
+}
+
 
 void getCPUInfo()
 {
@@ -67,30 +87,27 @@ void getCPUInfo()
 	ifstream fp;
         string Printer;
 
-        ifstream in("/proc/cpuinfo");
-        string buff((istreambuf_iterator<char>(in)),
-	istreambuf_iterator<char>());
-        fprintf(stdout,"CPU Informations: \n%s",buff.c_str());
-
-	fp.open("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq");
-	getline(fp,Printer);
-	fprintf(stdout,"\n","Current CPU Freq: %s\n",Printer.c_str());
-	fp.close();
-
-	fp.open("/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq");
-	getline(fp,Printer);
-	fprintf(stdout,"Current Max CPU Freq: %s\n",Printer.c_str());
-	fp.close();
-
-	fp.open("/sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq");
-	getline(fp,Printer);
-	fprintf(stdout,"Current Min CPU Freq: %s\n",Printer.c_str());
-	fp.close();	
+	Printer = BuffFile("/proc/cpuinfo");
+	fprintf(stdout,"CPU Informations: \n%s",Printer.c_str());
 	
-	fp.open("/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor");
-	getline(fp,Printer);
+	Printer = LineFile("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq");
+	fprintf(stdout,"\n","Current CPU Freq: %s\n",Printer.c_str());
+
+	Printer = LineFile("/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq");
+	fprintf(stdout,"Current Max CPU Freq: %s\n",Printer.c_str());
+
+	Printer = LineFile("/sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq");
+	fprintf(stdout,"Current Min CPU Freq: %s\n",Printer.c_str());	
+	
+	Printer = LineFile("/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor");
 	fprintf(stdout,"Current CPU Governor: %s\n",Printer.c_str());
-	fp.close();
+
+	Printer = LineFile("/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies");
+        fprintf(stdout,"Scaling available frequencies: %s\n",Printer.c_str());
+
+	Printer = LineFile("/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors");
+        fprintf(stdout,"Scaling available governors: %s\n",Printer.c_str());
+
 }
 
 void getVddLevels()
@@ -112,60 +129,39 @@ void getVddLevels()
 void getBatteryInfo()
 {
 
-	ifstream fp;
 	string Printer;
 
-	fp.open("/sys/class/power_supply/battery/status");
-	getline(fp,Printer);
+	Printer = LineFile("/sys/class/power_supply/battery/status");
 	fprintf(stdout,"Battery Status: %s\n",Printer.c_str());
-	fp.close();
 
-	fp.open("/sys/class/power_supply/battery/technology");
-	getline(fp,Printer);
+	Printer = LineFile("/sys/class/power_supply/battery/technology");
 	fprintf(stdout,"Battery Technology: %s\n",Printer.c_str());
-	fp.close();
 
-	fp.open("/sys/class/power_supply/battery/capacity");
-	getline(fp,Printer);
+	Printer = LineFile("/sys/class/power_supply/battery/capacity");
 	fprintf(stdout,"Battery Level: %s\n",Printer.c_str());
-	fp.close();
 
-	fp.open("/sys/class/power_supply/battery/voltage_now");
-	getline(fp,Printer);
+	Printer = LineFile("/sys/class/power_supply/battery/voltage_now");
 	fprintf(stdout,"Current battery voltage: %s\n",Printer.c_str());
-	fp.close();
 
-	fp.open("/sys/class/power_supply/battery/voltage_max_design");
-	getline(fp,Printer);
+	Printer = LineFile("/sys/class/power_supply/battery/voltage_max_design");
 	fprintf(stdout,"Design Maximal Voltage: %s\n",Printer.c_str());
-	fp.close();
 
-	fp.open("/sys/class/power_supply/battery/voltage_min_design");
-	getline(fp,Printer);
+	Printer = LineFile("/sys/class/power_supply/battery/voltage_min_design");
 	fprintf(stdout,"Design Minimal Voltage: %s\n",Printer.c_str());
-	fp.close();
 
-	fp.open("/sys/class/power_supply/battery/health");
-	getline(fp,Printer);
+	Printer = LineFile("/sys/class/power_supply/battery/health");
 	fprintf(stdout,"Battery Health: %s\n",Printer.c_str());
-	fp.close();
 
-	fp.open("/sys/class/power_supply/battery/batt_temp");
-	getline(fp,Printer);
+	Printer = LineFile("/sys/class/power_supply/battery/batt_temp");
 	fprintf(stdout,"Battery Temperature: %s\n",Printer.c_str());
-	fp.close();
 
 }
 
 void getKernelInfo()
 {
 
-	ifstream in("/proc/version");
-	string buff((istreambuf_iterator<char>(in)), 
-    	istreambuf_iterator<char>());
+	string buff = BuffFile("/proc/version");
 	fprintf(stdout,"Linux Kernel Informations: \n%s",buff.c_str());
-
-	in.close();
 	
 }
 
