@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const char ver[] = "0.7.2_beta";
+const char ver[] = "0.7.3_beta";
 
 static void menu(void);
 
