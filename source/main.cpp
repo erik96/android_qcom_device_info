@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const char ver[] = "0.7.3_beta";
+const char ver[] = "0.7.4_beta";
 
 static void menu(void);
 
@@ -80,7 +80,7 @@ int main ()
     				getDiskInfo();
 				break;
 			default: 
-				fprintf(stdout, "Unknown value\n");
+				fprintf(stderr, "Unknown value\n");
 				break;
 		}
 	}

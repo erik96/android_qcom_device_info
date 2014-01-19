@@ -3,9 +3,7 @@
 #include <cstdlib>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <dirent.h>
 #include <sstream>
-#include <iostream>
 
 #include "functions.h"
 #include "helpers.h"
@@ -163,28 +161,7 @@ void getLogs()
 
 void getVMStats()
 {
-	DIR *dir;
-	dirent *pdir;
-	char buff[128];
-	ifstream in;
-	int val;
-	unsigned short i = 0;
-
-	dir = opendir("/proc/sys/vm");
-	
-	while(pdir = readdir(dir))
-	{
-		++i;
-		sprintf(buff, "/proc/sys/vm/%s", pdir->d_name);
-		if(i>2)
-		{
-			in.open(buff);
-			in>>val;	
-			cout << pdir->d_name <<": "<<val<<"\n";
-			in.close();
-		}
-	}
-	closedir(dir);
+	PrintDirContent("/proc/sys/vm");
 }
 
 static inline int kb_to_mb(int t)

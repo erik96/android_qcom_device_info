@@ -3,6 +3,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <cstdlib>
+#include <iostream>
+#include <dirent.h>
 
 #include "helpers.h"
 
@@ -22,6 +24,7 @@ string LineFile(const char *infile)
 	string ret;
 	ifstream in(infile);
 	getline(in,ret);
+	in.close();
 
 	return ret;
 }
@@ -44,6 +47,32 @@ void cpy (const char *infile, const char *outfile)
 		src.close();
 		return;
 	}
+}
+
+void PrintDirContent(const char *path)
+{
+	DIR *dir;
+	dirent *pdir;
+	char buff[128];
+	ifstream in;
+	string val;
+	unsigned short i = 0;
+
+	dir = opendir(path);
+	
+	while(pdir = readdir(dir))
+	{
+		++i;
+		sprintf(buff,"%s/%s",path,pdir->d_name);
+		if(i>2)
+		{
+			in.open(buff);
+			getline(in,val);
+			cout << pdir->d_name <<": "<<val.c_str()<<"\n";
+			in.close();
+		}
+	}
+	closedir(dir);
 }
 
 void ExcuteScript(string content)
