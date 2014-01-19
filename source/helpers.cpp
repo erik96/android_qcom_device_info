@@ -29,7 +29,7 @@ string LineFile(const char *infile)
 	return ret;
 }
 
-void cpy (const char *infile, const char *outfile)
+void cpy(const char *infile, const char *outfile)
 {
 	ifstream  src(infile, ios::binary);
 
@@ -54,7 +54,6 @@ void PrintDirContent(const char *path)
 	DIR *dir;
 	dirent *pdir;
 	char buff[128];
-	ifstream in;
 	string val;
 	unsigned short i = 0;
 
@@ -66,10 +65,8 @@ void PrintDirContent(const char *path)
 		sprintf(buff,"%s/%s",path,pdir->d_name);
 		if(i>2)
 		{
-			in.open(buff);
-			getline(in,val);
+			val = LineFile(buff);
 			cout << pdir->d_name <<": "<<val.c_str()<<"\n";
-			in.close();
 		}
 	}
 	closedir(dir);
