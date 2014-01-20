@@ -7,6 +7,23 @@
 
 #include "helpers.h"
 
+static bool FileExists(const char *filename)
+{
+	bool ret;
+	ifstream in(filename);
+
+	if (in) {
+		ret = true;
+	}
+	else {
+		ret = false;
+	}
+
+	in.close();
+
+	return ret;
+}
+
 string BuffFile(const char *infile)
 {
 	ifstream in(infile);

@@ -88,19 +88,21 @@ void getCPUInfo()
 
 }
 
-void getVddLevels()
+bool getVddLevels()
 {
 
 	ifstream in("sys/devices/system/cpu/cpu0/cpufreq/vdd_levels");
 	if (!in)
 	{
 		fprintf(stderr,"Your kernel doesn't support VDD Sysfs interface\n");
-		return;
+		return false;
 	}
 
 	string buff((istreambuf_iterator<char>(in)), 
     	istreambuf_iterator<char>());
 	fprintf(stdout,"Voltage Table: \n%s",buff.c_str());
+
+	return true;
 }
 	
 
@@ -252,4 +254,19 @@ void getDiskInfo()
 	}
 
 	in.close();
+}
+
+void UnderVolt()
+{
+
+	if (!getVddLevels())
+		return;
+
+}
+
+void OverVolt()
+{
+
+	if (!getVddLevels())
+		return;
 }

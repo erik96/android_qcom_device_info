@@ -7,9 +7,11 @@
 
 using namespace std;
 
-const char ver[] = "0.7.4_beta";
+const char ver[] = "0.7.5_beta";
+unsigned short ch;
 
 static void menu(void);
+static void AdvancedMenu(void);
 
 static void clear()
 {
@@ -17,28 +19,33 @@ static void clear()
 	remove("/data/local/tmp.sh");
 }
 
-static bool FileExists(const char *filename)
-{
-	bool ret;
-	ifstream in(filename);
-
-	if (in) {
-		ret = true;
-	}
-	else {
-		ret = false;
-	}
-
-	in.close();
-
-	return ret;
-}
-
 int main ()
 {
 
-	unsigned short ch;
 	menu();
+
+	clear();
+	return 0;
+
+
+}
+
+static void menu()
+{
+
+	fprintf(stdout, "Ariesve Device Info v%s by educk@XDA-Dev.com\n",ver);
+	fprintf(stdout, "Options:\n"
+			"1: Get ROM Information\n" 
+			"2: Get CPU Information\n"
+			"3: Get Battery Information\n"
+			"4: Get Voltage Table\n"
+			"5: Get Linux Kernel Informations\n"
+			"6: Dump logcat and last_kmsg (store them to /sdcard/logs/)\n"
+			"7: Get VM Stats\n"
+			"8: Get RAM Informations\n"
+			"9: Get Disk Informations\n"
+			"10: Advanced Menu\n"
+			"0: Quit\n");
 
 	do
 	{
@@ -79,6 +86,9 @@ int main ()
 			case 9:
     				getDiskInfo();
 				break;
+			case 10:
+				AdvancedMenu();
+				break;
 			default: 
 				fprintf(stderr, "Unknown value\n");
 				break;
@@ -86,26 +96,37 @@ int main ()
 	}
 
 	while (ch != 0);
-
-	clear();
-	return 0;
-
-
 }
 
-static void menu()
+static void AdvancedMenu()
 {
+	fprintf(stdout,"Advanced Options:\n"
+			"1:UnderVolt [WIP]\n"
+			"2:OverVolt [WIP]\n"
+			"0:Back\n");
 
-	fprintf(stdout, "Ariesve Device Info v%s by educk@XDA-Dev.com\n",ver);
-	fprintf(stdout, "Options:\n"
-			"1: Get ROM Information\n" 
-			"2: Get CPU Information\n"
-			"3: Get Battery Information\n"
-			"4: Get Voltage Table\n"
-			"5: Get Linux Kernel Informations\n"
-			"6: Dump logcat and last_kmsg (store them to /sdcard/logs/)\n"
-			"7: Get VM Stats\n"
-			"8: Get RAM Informations\n"
-			"9: Get Disk Informations\n"
-			"0: Quit\n");
+	do
+	{
+		cin>>ch;
+
+		switch(ch)
+		{
+			case 0:
+				break;
+			case 1:
+				UnderVolt();
+				break;
+			case 2:
+				OverVolt();
+				break;
+			default:
+				fprintf(stderr, "Unknown value\n");
+				break;
+		}
+
+	}
+	while(ch != 0);
+
+
+	return menu();
 }
