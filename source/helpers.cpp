@@ -3,7 +3,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <cstdlib>
-#include <iostream>
 #include <dirent.h>
 
 #include "helpers.h"
@@ -66,7 +65,7 @@ void PrintDirContent(const char *path)
 		if(i>2)
 		{
 			val = LineFile(buff);
-			cout << pdir->d_name <<": "<<val.c_str()<<"\n";
+			fprintf(stdout,"%s: %s\n",pdir->d_name,val.c_str());
 		}
 	}
 	closedir(dir);
