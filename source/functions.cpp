@@ -255,18 +255,3 @@ void getDiskInfo()
 
 	in.close();
 }
-
-void UnderVolt()
-{
-
-	if (!getVddLevels())
-		return;
-
-}
-
-void OverVolt()
-{
-
-	if (!getVddLevels())
-		return;
-}
