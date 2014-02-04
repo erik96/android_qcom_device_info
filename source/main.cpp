@@ -4,6 +4,7 @@
 #include <fstream>
 
 #include "functions.h"
+#include "helpers.h"
 
 using namespace std;
 
@@ -32,8 +33,10 @@ int main ()
 
 static void menu()
 {
+	if (IsNexus5())
+		fprintf(stdout,"You are running Nexus 5\n");
 
-	fprintf(stdout, "Ariesve Device Info v%s by educk@XDA-Dev.com\n",ver);
+	fprintf(stdout, "Qualcomm Device Info v%s by educk@XDA-Dev.com\n",ver);
 	fprintf(stdout, "Options:\n"
 			"1: Get ROM Information\n" 
 			"2: Get CPU Information\n"

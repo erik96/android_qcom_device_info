@@ -7,7 +7,42 @@
 
 #include "helpers.h"
 
-static bool FileExists(const char *filename)
+bool IsNexus5()
+{
+	string line;
+	string line1("Nexus 5");
+	unsigned short len;
+
+	ifstream fp;
+	fp.open("/system/build.prop");
+
+	if (!fp)
+	{
+		fprintf(stderr,"%s\n","Unable to open input file");
+		return false;
+	}
+
+
+	size_t pos;
+	while (fp.good())
+	{
+		getline(fp,line);
+		pos = line.find(line1);
+
+		if(pos!=string::npos)
+		{
+			fp.close();
+			return true;
+		}
+	}
+
+	fp.close();
+	return false;
+}
+
+
+
+bool FileExists(const char *filename)
 {
 	bool ret;
 	ifstream in(filename);

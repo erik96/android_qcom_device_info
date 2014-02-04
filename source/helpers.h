@@ -2,6 +2,10 @@
 
 using namespace std;
 
+bool IsNexus5();
+
+bool FileExists(const char *filename);
+
 string BuffFile(const char *infile);
 
 string LineFile(const char *infile);

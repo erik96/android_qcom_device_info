@@ -90,8 +90,13 @@ void getCPUInfo()
 
 bool getVddLevels()
 {
-
-	ifstream in("sys/devices/system/cpu/cpu0/cpufreq/vdd_levels");
+	ifstream in;
+	if (IsNexus5())
+		in.open("sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table");
+	if (IsNexus5() && !FileExists("sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table"))
+		in.open("/sys/devices/system/cpu/cpufreq/vdd_table/vdd_levels");
+	if (!IsNexus5())
+		in.open("sys/devices/system/cpu/cpu0/cpufreq/vdd_levels");
 	if (!in)
 	{
 		fprintf(stderr,"Your kernel doesn't support VDD Sysfs interface\n");
@@ -100,6 +105,7 @@ bool getVddLevels()
 
 	string buff((istreambuf_iterator<char>(in)), 
     	istreambuf_iterator<char>());
+	in.close();
 	fprintf(stdout,"Voltage Table: \n%s",buff.c_str());
 
 	return true;
@@ -132,7 +138,10 @@ void getBatteryInfo()
 	Printer = LineFile("/sys/class/power_supply/battery/health");
 	fprintf(stdout,"Battery Health: %s\n",Printer.c_str());
 
-	Printer = LineFile("/sys/class/power_supply/battery/batt_temp");
+	if (IsNexus5())
+		Printer = LineFile("/sys/class/power_supply/battery/temp");
+	else
+		Printer = LineFile("/sys/class/power_supply/battery/batt_temp");
 	fprintf(stdout,"Battery Temperature: %s\n",Printer.c_str());
 
 }
