@@ -100,10 +100,7 @@ static void menu()
 
 static void AdvancedMenu()
 {
-	fprintf(stdout,"Advanced Options:\n"
-			"1:UnderVolt [WIP]\n"
-			"2:OverVolt [WIP]\n"
-			"0:Back\n");
+	fprintf(stdout,"Advanced Options:\n");
 
 	do
 	{
@@ -112,12 +109,6 @@ static void AdvancedMenu()
 		switch(ch)
 		{
 			case 0:
-				break;
-			case 1:
-				UnderVolt();
-				break;
-			case 2:
-				OverVolt();
 				break;
 			default:
 				fprintf(stderr, "Unknown value\n");
