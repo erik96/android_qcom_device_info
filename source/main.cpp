@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const char ver[] = "0.7.5_beta";
+const char ver[] = "0.8_beta";
 unsigned short ch;
 
 static void menu(void);
@@ -20,7 +20,7 @@ static void clear()
 	remove("/data/local/tmp.sh");
 }
 
-int main ()
+int main()
 {
 
 	menu();
@@ -47,7 +47,7 @@ static void menu()
 			"7: Get VM Stats\n"
 			"8: Get RAM Informations\n"
 			"9: Get Disk Informations\n"
-			"10: Advanced Menu\n"
+			"10: Nexus 5 Extras\n"
 			"0: Quit\n");
 
 	do

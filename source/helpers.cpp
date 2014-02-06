@@ -11,7 +11,6 @@ bool IsNexus5()
 {
 	string line;
 	string line1("Nexus 5");
-	unsigned short len;
 
 	ifstream fp;
 	fp.open("/system/build.prop");
@@ -39,8 +38,6 @@ bool IsNexus5()
 	fp.close();
 	return false;
 }
-
-
 
 bool FileExists(const char *filename)
 {

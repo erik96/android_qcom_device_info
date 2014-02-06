@@ -248,13 +248,13 @@ void getDiskInfo()
 			Cache = true;
 			continue;
 		}
-		if (!strcmp(temp,sdcard1) && !SDcard1) {
+		if (!strcmp(temp,sdcard1) && !SDcard1 && !IsNexus5()) {
 			line.replace(0,strlen(sdcard1),"External SD:    ");
 			fprintf(stdout,"%s\n",line.c_str());
 			SDcard1 = true;
 			continue;
 		}
-		if (!strcmp(temp,sdcard0) && !SDcard0) {
+		if (!strcmp(temp,sdcard0) && !SDcard0 && !IsNexus5()) {
 			line.replace(0,strlen(sdcard0),"Internal SD:    ");
 			fprintf(stdout,"%s\n",line.c_str());
 			SDcard0 = true;

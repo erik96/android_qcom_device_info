@@ -21,7 +21,3 @@ void getRAMInfo();
 void getDiskInfo();
 
 /* ADVANCED MENU */
-
-void UnderVolt();
-
-void OverVolt();
