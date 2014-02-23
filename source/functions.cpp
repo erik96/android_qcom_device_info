@@ -7,6 +7,7 @@
 
 #include "functions.h"
 #include "helpers.h"
+#include "constants.h"
 
 using namespace std;
 
@@ -57,6 +58,7 @@ void getProperty(string line1, unsigned short s)
 		}
  	 }
 
+	fp.close();
 }
 
 void getCPUInfo()
@@ -65,25 +67,25 @@ void getCPUInfo()
 	ifstream fp;
         string Printer;
 
-	Printer = BuffFile("/proc/cpuinfo");
+	Printer = BuffFile(pCPUInfo);
 	fprintf(stdout,"CPU Informations: \n%s",Printer.c_str());
 	
-	Printer = LineFile("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq");
+	Printer = LineFile(pCurrCPUFeq);
 	fprintf(stdout,"\n","Current CPU Freq: %s\n",Printer.c_str());
 
-	Printer = LineFile("/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq");
+	Printer = LineFile(pCurrMaxCPUFreq);
 	fprintf(stdout,"Current Max CPU Freq: %s\n",Printer.c_str());
 
-	Printer = LineFile("/sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq");
+	Printer = LineFile(pCurrMinCPUFreq);
 	fprintf(stdout,"Current Min CPU Freq: %s\n",Printer.c_str());	
 	
-	Printer = LineFile("/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor");
+	Printer = LineFile(pCurrCPUGov);
 	fprintf(stdout,"Current CPU Governor: %s\n",Printer.c_str());
 
-	Printer = LineFile("/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies");
+	Printer = LineFile(pScalingFreq);
         fprintf(stdout,"Scaling available frequencies: %s\n",Printer.c_str());
 
-	Printer = LineFile("/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors");
+	Printer = LineFile(pScalingGovs);
         fprintf(stdout,"Scaling available governors: %s\n",Printer.c_str());
 
 }
@@ -177,7 +179,7 @@ void getVMStats()
 
 static inline int kb_to_mb(int t)
 {
-	return (t/1024);
+	return (t/SIZE);
 }
 
 void getRAMInfo()
@@ -264,3 +266,16 @@ void getDiskInfo()
 
 	in.close();
 }
+
+void getIOSchedInfo();
+
+void getGPUInfo();
+
+void getHotPlugInfo()
+{
+	PrintDirContent("/sys/devices/virtual/misc/mako_hotplug_control");
+
+	//fprintf(stdout, "\n TEST: %s\n", LineFile(GPU_AVAILABLE_FREQ).c_str());
+}
+
+void getExtraKernelInfo();

@@ -1,5 +1,7 @@
 #include <string>
 
+#define SIZE 1024
+
 using namespace std;
 
 void getProperty(string line1, unsigned short s);
@@ -19,5 +21,7 @@ void getVMStats();
 void getRAMInfo();
 
 void getDiskInfo();
+
+void getHotPlugInfo();
 
 /* ADVANCED MENU */

@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const char ver[] = "0.8_beta";
+const char *ver = "0.9_beta";
 unsigned short ch;
 
 static void menu(void);
@@ -22,13 +22,10 @@ static void clear()
 
 int main()
 {
-
 	menu();
 
 	clear();
 	return 0;
-
-
 }
 
 static void menu()
@@ -47,7 +44,7 @@ static void menu()
 			"7: Get VM Stats\n"
 			"8: Get RAM Informations\n"
 			"9: Get Disk Informations\n"
-			"10: Nexus 5 Extras\n"
+			"10: Nexus 5 Extras[WIP]\n"
 			"0: Quit\n");
 
 	do
@@ -103,7 +100,8 @@ static void menu()
 
 static void AdvancedMenu()
 {
-	fprintf(stdout,"Advanced Options:\n");
+	fprintf(stdout,"Advanced Options:\n"
+			"1: Get HotPlug Info\n");
 
 	do
 	{
@@ -112,6 +110,9 @@ static void AdvancedMenu()
 		switch(ch)
 		{
 			case 0:
+				break;
+			case 1:
+				getHotPlugInfo();
 				break;
 			default:
 				fprintf(stderr, "Unknown value\n");
