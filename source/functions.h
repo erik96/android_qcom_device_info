@@ -22,6 +22,8 @@ void getRAMInfo();
 
 void getDiskInfo();
 
+/* ADVANCED MENU */
+
 void getHotPlugInfo();
 
-/* ADVANCED MENU */
+void getGPUInfo();

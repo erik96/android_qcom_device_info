@@ -64,29 +64,19 @@ void getProperty(string line1, unsigned short s)
 void getCPUInfo()
 {
 	
-	ifstream fp;
-        string Printer;
-
-	Printer = BuffFile(pCPUInfo);
-	fprintf(stdout,"CPU Informations: \n%s",Printer.c_str());
+	fprintf(stdout,"CPU Informations: \n%s", BuffFile(CPU_INFO).c_str());
 	
-	Printer = LineFile(pCurrCPUFeq);
-	fprintf(stdout,"\n","Current CPU Freq: %s\n",Printer.c_str());
+	fprintf(stdout,"\n","Current CPU Freq: %s\n", LineFile(CURRENT_CPU_FREQ).c_str());
 
-	Printer = LineFile(pCurrMaxCPUFreq);
-	fprintf(stdout,"Current Max CPU Freq: %s\n",Printer.c_str());
+	fprintf(stdout,"Current Max CPU Freq: %s\n", LineFile(CURRENT_MAX_CPU_FREQ).c_str());
 
-	Printer = LineFile(pCurrMinCPUFreq);
-	fprintf(stdout,"Current Min CPU Freq: %s\n",Printer.c_str());	
+	fprintf(stdout,"Current Min CPU Freq: %s\n", LineFile(CURRENT_MIN_CPU_FREQ).c_str());	
 	
-	Printer = LineFile(pCurrCPUGov);
-	fprintf(stdout,"Current CPU Governor: %s\n",Printer.c_str());
+	fprintf(stdout,"Current CPU Governor: %s\n", LineFile(CURRENT_CPU_GOV).c_str());
 
-	Printer = LineFile(pScalingFreq);
-        fprintf(stdout,"Scaling available frequencies: %s\n",Printer.c_str());
+        fprintf(stdout,"Scaling available frequencies: %s\n", LineFile(SCALING_AVAILABLE_FREQ).c_str());
 
-	Printer = LineFile(pScalingGovs);
-        fprintf(stdout,"Scaling available governors: %s\n",Printer.c_str());
+        fprintf(stdout,"Scaling available governors: %s\n", LineFile(SCALING_AVAILABLE_GOVS).c_str());
 
 }
 
@@ -267,15 +257,23 @@ void getDiskInfo()
 	in.close();
 }
 
-void getIOSchedInfo();
+void getGPUInfo()
+{
+	fprintf(stdout,"GPU Up Threshold: %s\n", LineFile(GPU_UP_THRESHOLD).c_str());
 
-void getGPUInfo();
+	fprintf(stdout,"GPU Down Threshold: %s\n", LineFile(GPU_DOWN_THRESHOLD).c_str());
+
+	fprintf(stdout,"GPU Available Freq: %s\n", LineFile(GPU_AVAILABLE_FREQ).c_str());
+
+	fprintf(stdout,"Max GPU Freq: %s\n", LineFile(GPU_MAX_FREQ).c_str());
+
+	fprintf(stdout,"Current GPU Freq: %s\n", LineFile(GPU_CURRENT_FREQ).c_str());
+}
+
 
 void getHotPlugInfo()
 {
 	PrintDirContent("/sys/devices/virtual/misc/mako_hotplug_control");
-
-	//fprintf(stdout, "\n TEST: %s\n", LineFile(GPU_AVAILABLE_FREQ).c_str());
 }
 
 void getExtraKernelInfo();
