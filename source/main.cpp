@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const char *ver = "0.9.1_beta";
+const char *ver = "0.9.2_beta";
 unsigned short ch;
 
 static void menu(void);
@@ -102,7 +102,8 @@ static void AdvancedMenu()
 {
 	fprintf(stdout,"Advanced Options:\n"
 			"1: Get HotPlug Info\n"
-			"2: Get GPU Info\n");
+			"2: Get GPU Info\n"
+			"3: Get Extra Kernel Info\n");
 
 	do
 	{
@@ -117,6 +118,9 @@ static void AdvancedMenu()
 				break;
 			case 2:
 				getGPUInfo();
+				break;
+			case 3:
+				getExtraKernelInfo(0);
 				break;
 			default:
 				fprintf(stderr, "Unknown value\n");

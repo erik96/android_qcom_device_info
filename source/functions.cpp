@@ -107,43 +107,30 @@ bool getVddLevels()
 void getBatteryInfo()
 {
 
-	string Printer;
+	fprintf(stdout,"Battery Status: %s\n",LineFile(BATTERY_STATUS).c_str());
 
-	Printer = LineFile("/sys/class/power_supply/battery/status");
-	fprintf(stdout,"Battery Status: %s\n",Printer.c_str());
+	fprintf(stdout,"Battery Technology: %s\n",LineFile(BATTERY_TECHNOLOGY).c_str());
 
-	Printer = LineFile("/sys/class/power_supply/battery/technology");
-	fprintf(stdout,"Battery Technology: %s\n",Printer.c_str());
+	fprintf(stdout,"Battery Level: %s\n",LineFile(BATTERY_CAPACITY).c_str());
 
-	Printer = LineFile("/sys/class/power_supply/battery/capacity");
-	fprintf(stdout,"Battery Level: %s\n",Printer.c_str());
+	fprintf(stdout,"Current battery voltage: %s\n",LineFile(BATTERY_VOLTAGE).c_str());
 
-	Printer = LineFile("/sys/class/power_supply/battery/voltage_now");
-	fprintf(stdout,"Current battery voltage: %s\n",Printer.c_str());
+	fprintf(stdout,"Design Maximal Voltage: %s\n",LineFile(BATTERY_DESING_MAX_VOLTAGE).c_str());
 
-	Printer = LineFile("/sys/class/power_supply/battery/voltage_max_design");
-	fprintf(stdout,"Design Maximal Voltage: %s\n",Printer.c_str());
+	fprintf(stdout,"Design Minimal Voltage: %s\n",LineFile(BATTERY_DESING_MIN_VOLTAGE).c_str());
 
-	Printer = LineFile("/sys/class/power_supply/battery/voltage_min_design");
-	fprintf(stdout,"Design Minimal Voltage: %s\n",Printer.c_str());
-
-	Printer = LineFile("/sys/class/power_supply/battery/health");
-	fprintf(stdout,"Battery Health: %s\n",Printer.c_str());
+	fprintf(stdout,"Battery Health: %s\n",LineFile(BATTERY_HEALTH).c_str());
 
 	if (IsNexus5())
-		Printer = LineFile("/sys/class/power_supply/battery/temp");
+		fprintf(stdout,"Battery Temperature: %s\n",LineFile(BATTERY_TEMP).c_str());
 	else
-		Printer = LineFile("/sys/class/power_supply/battery/batt_temp");
-	fprintf(stdout,"Battery Temperature: %s\n",Printer.c_str());
+		fprintf(stdout,"Battery Temperature: %s\n",LineFile(BATTERY_TEMP_OLD).c_str());
 
 }
 
 void getKernelInfo()
 {
-
-	string buff = BuffFile("/proc/version");
-	fprintf(stdout,"Linux Kernel Informations: \n%s",buff.c_str());
-	
+	fprintf(stdout,"Linux Kernel Informations: \n%s",BuffFile("/proc/version").c_str());
 }
 
 void getLogs()
@@ -167,11 +154,6 @@ void getVMStats()
 	PrintDirContent("/proc/sys/vm");
 }
 
-static inline int kb_to_mb(int t)
-{
-	return (t/SIZE);
-}
-
 void getRAMInfo()
 {
 	int t;
@@ -187,7 +169,7 @@ void getRAMInfo()
 
 		istringstream ss(Printer);
 		ss>>temp>>t;
-		fprintf(stdout, "%s %d MB\n",temp,kb_to_mb(t));
+		fprintf(stdout, "%s %d MB\n",temp,t/SIZE);
 	}
 	in.close();
 }
@@ -257,6 +239,11 @@ void getDiskInfo()
 	in.close();
 }
 
+void getHotPlugInfo()
+{
+	PrintDirContent(HOTPLUG_PATH);
+}
+
 void getGPUInfo()
 {
 	fprintf(stdout,"GPU Up Threshold: %s\n", LineFile(GPU_UP_THRESHOLD).c_str());
@@ -270,10 +257,15 @@ void getGPUInfo()
 	fprintf(stdout,"Current GPU Freq: %s\n", LineFile(GPU_CURRENT_FREQ).c_str());
 }
 
-
-void getHotPlugInfo()
+void getExtraKernelInfo(int p)
 {
-	PrintDirContent("/sys/devices/virtual/misc/mako_hotplug_control");
-}
+	fprintf(stdout,"CPU Temp Threshold: %s\n", LineFile(TEMP_THRESHOLD).c_str());
 
-void getExtraKernelInfo();
+	fprintf(stdout,"Vibration Amp: %s\n", LineFile(VIBRATION_AMP).c_str());
+
+	//TODO: FAST CHARGE IntFile();
+	
+	fprintf(stdout,"Available TCP Congestion Algorithm: %s\n", LineFile(AVAILABLE_TCP_CONGESTION_ALGORITHM).c_str());
+
+	fprintf(stdout,"Current TCP Congestion Algorithm: %s\n", LineFile(TCP_CONGESTION_ALGORITHM).c_str());
+}
