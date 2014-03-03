@@ -6,6 +6,8 @@ bool IsNexus5();
 
 bool FileExists(const char *filename);
 
+bool IsOn(const char *infile);
+
 string BuffFile(const char *infile);
 
 string LineFile(const char *infile);

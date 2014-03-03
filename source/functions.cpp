@@ -259,11 +259,16 @@ void getGPUInfo()
 
 void getExtraKernelInfo(int p)
 {
+	char IsFastCharge[] = "OFF";
+
+	if (IsOn(FORCE_FAST_CHARGE))
+		strcpy(IsFastCharge, "ON");
+
 	fprintf(stdout,"CPU Temp Threshold: %s\n", LineFile(TEMP_THRESHOLD).c_str());
 
 	fprintf(stdout,"Vibration Amp: %s\n", LineFile(VIBRATION_AMP).c_str());
 
-	//TODO: FAST CHARGE IntFile();
+	fprintf(stdout,"Fast charge is: %s\n", IsFastCharge);
 	
 	fprintf(stdout,"Available TCP Congestion Algorithm: %s\n", LineFile(AVAILABLE_TCP_CONGESTION_ALGORITHM).c_str());
 

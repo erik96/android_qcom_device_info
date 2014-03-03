@@ -77,6 +77,15 @@ string LineFile(const char *infile)
 	return ret;
 }
 
+bool IsOn(const char *infile)
+{
+	bool ret;
+	ifstream in(infile);
+	in>>ret;
+
+	return ret;
+}
+
 void cpy(const char *infile, const char *outfile)
 {
 	ifstream  src(infile, ios::binary);

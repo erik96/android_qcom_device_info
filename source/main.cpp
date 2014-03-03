@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const char *ver = "0.9.2_beta";
+const char *ver = "0.9.3_beta";
 unsigned short ch;
 
 static void menu(void);
