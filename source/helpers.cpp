@@ -82,6 +82,7 @@ bool IsOn(const char *infile)
 	bool ret;
 	ifstream in(infile);
 	in>>ret;
+	in.close();
 
 	return ret;
 }
