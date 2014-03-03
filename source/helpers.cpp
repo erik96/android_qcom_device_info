@@ -56,6 +56,16 @@ bool FileExists(const char *filename)
 	return ret;
 }
 
+bool IsOn(const char *infile)
+{
+	bool ret;
+	ifstream in(infile);
+	in>>ret;
+	in.close();
+
+	return ret;
+}
+
 string BuffFile(const char *infile)
 {
 	ifstream in(infile);
@@ -72,16 +82,6 @@ string LineFile(const char *infile)
 	string ret;
 	ifstream in(infile);
 	getline(in,ret);
-	in.close();
-
-	return ret;
-}
-
-bool IsOn(const char *infile)
-{
-	bool ret;
-	ifstream in(infile);
-	in>>ret;
 	in.close();
 
 	return ret;
@@ -153,42 +153,4 @@ void ExcuteScript(const char *content)
 
 	usleep(700000); //Wait for the script execution
 	return;
-}
-
-string GetCPUFreq(const char *path, int jump)
-{
-	string ret;
-	ifstream in;
-
-	in.open(path);
-	
-	for (int i=1; i<=jump; i++)
-		in>>ret;
-
-	in>>ret;
-	in.close();
-
-	return ret;
-}
-
-int NrFrequencies(const char *path)
-{
-	int ret = 0;
-	string temp;
-	ifstream in;
-
-	in.open(path);
-
-	if (!in)
-		return -1;
-
-	while (in.good())
-	{
-		in>>temp;
-		ret++;
-	}
-	in.close();
-	ret--;
-
-	return ret;
 }
