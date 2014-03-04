@@ -45,13 +45,13 @@ const char *HOTPLUG_TIMER = "/sys/devices/virtual/misc/mako_hotplug_control/time
 
 /* EXTRA PATHS */
 
-//TODO: /sys/class/misc/soundcontrol/
-
 const char *TEMP_THRESHOLD = "/sys/module/msm_thermal/parameters/temp_threshold";
 const char *VIBRATION_AMP = "/sys/class/timed_output/vibrator/amp";
 const char *FORCE_FAST_CHARGE = "/sys/kernel/fast_charge/force_fast_charge";
 const char *AVAILABLE_TCP_CONGESTION_ALGORITHM = "/proc/sys/net/ipv4/tcp_available_congestion_control";
 const char *TCP_CONGESTION_ALGORITHM = "/proc/sys/net/ipv4/tcp_congestion_control";
+
+const char *SOUND_CONTROL_PATH = "sys/class/misc/soundcontrol";
 
 
 

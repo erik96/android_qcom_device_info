@@ -1,4 +1,4 @@
-#include <string>
+#include <cstring>
 #include <fstream>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -113,19 +113,20 @@ void PrintDirContent(const char *path)
 	dirent *pdir;
 	char buff[128];
 	string val;
-	unsigned short i = 0;
 
 	dir = opendir(path);
 	
 	while(pdir = readdir(dir))
 	{
-		++i;
+
+		if(!strcmp(pdir->d_name,"power") || !strcmp(pdir->d_name, "uevent") || 
+			!strcmp(pdir->d_name, "subsystem") || !strcmp(pdir->d_name, ".") ||
+			!strcmp(pdir->d_name, ".."))
+				continue;
+
 		sprintf(buff,"%s/%s",path,pdir->d_name);
-		if(i>2)
-		{
-			val = LineFile(buff);
-			fprintf(stdout,"%s: %s\n",pdir->d_name,val.c_str());
-		}
+		val = LineFile(buff);
+		fprintf(stdout,"%s: %s\n",pdir->d_name,val.c_str());
 	}
 	closedir(dir);
 }

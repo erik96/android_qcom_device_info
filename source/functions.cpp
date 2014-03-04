@@ -241,11 +241,15 @@ void getDiskInfo()
 
 void getHotPlugInfo()
 {
+	fprintf(stdout, "\nHotplug Info:\n");
 	PrintDirContent(HOTPLUG_PATH);
 }
 
 void getGPUInfo()
 {
+
+	fprintf(stdout, "\nGPU Info:\n");
+
 	fprintf(stdout,"GPU Up Threshold: %s\n", LineFile(GPU_UP_THRESHOLD).c_str());
 
 	fprintf(stdout,"GPU Down Threshold: %s\n", LineFile(GPU_DOWN_THRESHOLD).c_str());
@@ -264,6 +268,8 @@ void getExtraKernelInfo(int p)
 	if (IsOn(FORCE_FAST_CHARGE))
 		strcpy(FastChargeStatus, "ON");
 
+	fprintf(stdout, "\nExtra Kernel Info:\n");
+
 	fprintf(stdout,"CPU Temp Threshold: %s\n", LineFile(TEMP_THRESHOLD).c_str());
 
 	fprintf(stdout,"Vibration Amp: %s\n", LineFile(VIBRATION_AMP).c_str());
@@ -273,4 +279,7 @@ void getExtraKernelInfo(int p)
 	fprintf(stdout,"Available TCP Congestion Algorithm: %s\n", LineFile(AVAILABLE_TCP_CONGESTION_ALGORITHM).c_str());
 
 	fprintf(stdout,"Current TCP Congestion Algorithm: %s\n", LineFile(TCP_CONGESTION_ALGORITHM).c_str());
+
+	fprintf(stdout, "\nSound Control Parameters:\n");
+	PrintDirContent(SOUND_CONTROL_PATH);
 }
