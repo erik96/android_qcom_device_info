@@ -123,9 +123,6 @@ static void AdvancedMenu()
 			case 3:
 				getExtraKernelInfo(0);
 				break;
-			case 4:
-				tune(1);
-				break;
 			default:
 				fprintf(stderr, "Unknown value\n");
 				break;
