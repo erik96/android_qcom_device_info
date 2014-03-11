@@ -29,3 +29,8 @@ void getHotPlugInfo();
 void getGPUInfo();
 
 void getExtraKernelInfo(int p);
+
+
+/* CUSTOMIZER */
+
+void tune(int p);

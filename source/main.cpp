@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const char *ver = "0.9.4_beta";
+const char *ver = "0.9.5_alpha";
 unsigned short ch;
 
 static void menu(void);
@@ -122,6 +122,9 @@ static void AdvancedMenu()
 				break;
 			case 3:
 				getExtraKernelInfo(0);
+				break;
+			case 4:
+				tune(1);
 				break;
 			default:
 				fprintf(stderr, "Unknown value\n");

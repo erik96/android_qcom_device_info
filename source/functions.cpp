@@ -176,7 +176,7 @@ void getRAMInfo()
 
 void getDiskInfo()
 {
-	ExcuteScript("df &>/data/local/data.txt");
+	ExecuteScript("df &>/data/local/data.txt");
 
 	ifstream in;
 	in.open("/data/local/data.txt");

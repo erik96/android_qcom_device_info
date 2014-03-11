@@ -16,4 +16,6 @@ void cpy (const char *infile, const char *outfile);
 
 void PrintDirContent(const char *path);
 
-void ExcuteScript(const char *content);
+void ExecuteScript(const char *content);
+
+void write_to_file(int val, const char *path);

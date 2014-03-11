@@ -131,7 +131,7 @@ void PrintDirContent(const char *path)
 	closedir(dir);
 }
 
-void ExcuteScript(const char *content)
+void ExecuteScript(const char *content)
 {
 	ofstream script("/data/local/tmp.sh");
 
@@ -154,4 +154,11 @@ void ExcuteScript(const char *content)
 
 	usleep(700000); //Wait for the script execution
 	return;
+}
+
+void write_to_file(int val, const char *path)
+{
+	ofstream out(path);
+	out<<val;
+	out.close();
 }
