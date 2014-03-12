@@ -26,7 +26,7 @@ void getDiskInfo();
 
 void getHotPlugInfo();
 
-void getGPUInfo();
+void getGPUInfo(int p);
 
 void getExtraKernelInfo(int p);
 

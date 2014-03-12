@@ -1,14 +1,15 @@
 #include <fstream>
+#include <iostream>
 
 #include "constants.h"
-#include "helpers.h"
 #include "functions.h"
+#include "classes.h"
 
 using namespace std;
 
-void _error()
+void _error(int val)
 {
-	fprintf(stderr,"Invalid value, aborting...");
+	fprintf(stderr,"Invalid value(%d), aborting...\n",val);
 }
 
 
@@ -26,6 +27,7 @@ void tune(int p)
  */
 
 	int val;
+	SysfsIO TUNNER;
 
 	switch (p)
 	{
@@ -35,10 +37,34 @@ void tune(int p)
 			fscanf(stdin,"%d",&val);
 
 			if (val<30 || val>150)
-				return _error();
+				return _error(val);
 			else
-				write_to_file(val, TEMP_THRESHOLD);
+				 TUNNER.create_w(TEMP_THRESHOLD,val);
 			getExtraKernelInfo(p);
+			break;
+		case 2:
+			getExtraKernelInfo(p);
+			fprintf(stdout,"New Value:");
+			fscanf(stdin,"%d",&val);
+
+			if (val<0 || val>100)
+				return _error(val);
+			else
+				 TUNNER.create_w(VIBRATION_AMP,val);
+			getExtraKernelInfo(p);
+			break;
+		case 3:
+			getExtraKernelInfo(p);
+			fprintf(stdout,"New Value(ON:1 OFF:0):");
+			fscanf(stdin,"%d",&val);
+
+			if (val != 1 && val != 0)
+				return _error(val);
+			else
+				 TUNNER.create_w(FORCE_FAST_CHARGE,val);
+			getExtraKernelInfo(p);
+			break;
+		default:
 			break;
 	}
 }

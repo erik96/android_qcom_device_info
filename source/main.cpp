@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const char *ver = "0.9.5_alpha";
+const char *ver = "0.9.6_alpha";
 unsigned short ch;
 
 static void menu(void);
@@ -118,11 +118,12 @@ static void AdvancedMenu()
 				getHotPlugInfo();
 				break;
 			case 2:
-				getGPUInfo();
+				getGPUInfo(0);
 				break;
 			case 3:
 				getExtraKernelInfo(0);
 				break;
+
 			default:
 				fprintf(stderr, "Unknown value\n");
 				break;
