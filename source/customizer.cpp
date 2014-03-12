@@ -19,11 +19,11 @@ void tune(int p)
  * 1 - CPU Temp Threshold
  * 2 - Vibration Amp
  * 3 - Fast Charge
- * 4 - TCP
- * 5 - Sound Control Parameters
- * 6 - GPU Up threshold
- * 7 - GPU Down threshold
- * 8 - Max GPU Freq
+ * 4 - TCP -> TODO
+ * 5 - Sound Control Parameters -> TODO
+ * 6 - GPU Up threshold -> TODO
+ * 7 - GPU Down threshold -> TODO
+ * 8 - Max GPU Freq -> TODO
  */
 
 	int val;

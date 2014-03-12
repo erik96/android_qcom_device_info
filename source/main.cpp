@@ -6,9 +6,10 @@
 #include "functions.h"
 #include "helpers.h"
 
+#define ver "0.9.6_alpha"
+
 using namespace std;
 
-const char *ver = "0.9.6_alpha";
 unsigned short ch;
 
 static void menu(void);
@@ -49,7 +50,7 @@ static void menu()
 
 	do
 	{
-		cin>>ch;
+		fscanf(stdin,"%hu",&ch);
 
 		switch (ch)
 		{
@@ -108,7 +109,7 @@ static void AdvancedMenu()
 
 	do
 	{
-		cin>>ch;
+		fscanf(stdin,"%hu",&ch);
 
 		switch(ch)
 		{
