@@ -11,6 +11,7 @@ class SysfsIO {
 		int val;
 		string path;
 		string content;
+		string poss;
 
 		string BuffFile(const char *infile);
 
@@ -25,6 +26,8 @@ class SysfsIO {
 		void create_w(string path, int val);
 
 		void create_w(string path, string content);
+
+		bool create_w(string poss_path,string path,string content);
 
 		
 };

@@ -261,7 +261,7 @@ void getGPUInfo(int p)
 	if(!p || p == 7)
 		fprintf(stdout,"GPU Down Threshold: %s\n", GPU.create_rline(GPU_DOWN_THRESHOLD).c_str());
 
-	if(!p)
+	if(!p || p == -1)
 		fprintf(stdout,"GPU Available Freq: %s\n", GPU.create_rline(GPU_AVAILABLE_FREQ).c_str());
 	if(!p || p == 8)
 		fprintf(stdout,"Max GPU Freq: %s\n", GPU.create_rline(GPU_MAX_FREQ).c_str());
@@ -290,7 +290,7 @@ void getExtraKernelInfo(int p)
 	if(!p || p == 3)
 		fprintf(stdout,"Fast charge is: %s\n", FastChargeStatus);
 
-	if(!p)
+	if(!p || p == 4)
 		fprintf(stdout,"Available TCP Congestion Algorithm: %s\n", EXTRA.create_rline(AVAILABLE_TCP_CONGESTION_ALGORITHM).c_str());
 
 	if(!p || p == 4)

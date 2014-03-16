@@ -24,7 +24,6 @@ string SysfsIO::LineFile(const char *infile) {
 	return ret;
 }
 
-
 string SysfsIO::create_rline(string path) {
 	this->path = path;
 	this->content = LineFile(path.c_str());
@@ -51,4 +50,21 @@ void SysfsIO::create_w(string path, string content) {
 	ofstream out(path.c_str());
 	out<<content;
 	out.close();
+}
+
+bool SysfsIO::create_w(string poss_path,string path,string content) {
+	ofstream out;
+	this->poss = LineFile(poss_path.c_str());
+	this->path = path;
+	this->content = content;
+
+	if (poss.find(content) != string::npos)
+	{
+		out.open(path.c_str());
+		out<<content;
+		out.close();
+		return true;
+	}
+
+	return false;
 }
