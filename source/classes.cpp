@@ -1,4 +1,5 @@
 #include <fstream>
+#include <cstring>
 
 #include "classes.h"
 
@@ -66,5 +67,33 @@ bool SysfsIO::create_w(string poss_path,string path,string content) {
 		return true;
 	}
 
+	return false;
+}
+
+bool SysfsIO::create_w_test(string poss_path,string path,string content) {
+	
+	char *p;
+	FILE *f = fopen(poss_path.c_str(),"r");
+	ofstream out;
+
+	this->path = path;
+	this->content = content;
+	p = new char[64];
+
+	for(;fscanf(f,"%s",p)+1;)
+	{
+		if(!strcmp(p,content.c_str()))
+		{
+			out.open(path.c_str());
+			out<<content;
+			out.close();
+			fclose(f);
+			delete p;
+			return true;
+		}
+	}
+
+	delete p;
+	fclose(f);
 	return false;
 }
