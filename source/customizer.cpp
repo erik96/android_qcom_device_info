@@ -71,7 +71,7 @@ void tune(int p)
 			cin.ignore();
 			getline(cin,content);
 
-			if(TUNNER.create_w_test(AVAILABLE_TCP_CONGESTION_ALGORITHM,
+			if(TUNNER.create_w(AVAILABLE_TCP_CONGESTION_ALGORITHM,
 						TCP_CONGESTION_ALGORITHM,content))
 				getExtraKernelInfo(p);
 			else

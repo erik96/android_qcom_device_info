@@ -54,23 +54,6 @@ void SysfsIO::create_w(string path, string content) {
 }
 
 bool SysfsIO::create_w(string poss_path,string path,string content) {
-	ofstream out;
-	this->poss = LineFile(poss_path.c_str());
-	this->path = path;
-	this->content = content;
-
-	if (poss.find(content) != string::npos)
-	{
-		out.open(path.c_str());
-		out<<content;
-		out.close();
-		return true;
-	}
-
-	return false;
-}
-
-bool SysfsIO::create_w_test(string poss_path,string path,string content) {
 	
 	char *p;
 	FILE *f = fopen(poss_path.c_str(),"r");
