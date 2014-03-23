@@ -1,5 +1,6 @@
 #include <fstream>
 #include <cstring>
+#include <vector>
 
 #include "classes.h"
 
@@ -79,4 +80,16 @@ bool SysfsIO::create_w(string poss_path,string path,string content) {
 	delete p;
 	fclose(f);
 	return false;
+}
+
+void SysfsIO::create_w(string path,vector< pair<string,int> > &v, int cont, int val)
+{
+	char buff[128];
+	sprintf(buff,"%s/%s",path.c_str(),v[cont].first.c_str());
+	v[cont].second = val;
+
+	ofstream out(buff);
+	out<<val;
+	out.close();
+
 }

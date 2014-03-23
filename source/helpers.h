@@ -1,4 +1,5 @@
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -19,3 +20,5 @@ void PrintDirContent(const char *path);
 void ExecuteScript(const char *content);
 
 void write_to_file(int val, const char *path);
+
+void populate_vector(const char *path,vector< pair<string,int> > &v);

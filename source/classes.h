@@ -27,6 +27,8 @@ class SysfsIO {
 		void create_w(string path, string content);
 
 		bool create_w(string poss_path,string path,string content);
+
+		void create_w(string path,vector< pair<string,int> > &v, int cont, int val);
 		
 
 		

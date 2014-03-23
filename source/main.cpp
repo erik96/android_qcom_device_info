@@ -11,6 +11,7 @@
 using namespace std;
 
 unsigned short ch;
+vector < pair <string,int> > v;
 
 static void menu(void);
 static void AdvancedMenu(void);
@@ -83,7 +84,6 @@ static void menu()
 			case 8:
 				getRAMInfo();
 				break;
-
 			case 9:
     				getDiskInfo();
 				break;
@@ -124,7 +124,6 @@ static void AdvancedMenu()
 			case 3:
 				getExtraKernelInfo(0);
 				break;
-
 			default:
 				fprintf(stderr, "Unknown value\n");
 				break;

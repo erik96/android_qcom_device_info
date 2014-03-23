@@ -4,6 +4,9 @@
 #include <unistd.h>
 #include <cstdlib>
 #include <dirent.h>
+#include <vector>
+#include <string>
+#include <iostream>
 
 #include "helpers.h"
 
@@ -161,4 +164,51 @@ void write_to_file(int val, const char *path)
 	ofstream out(path);
 	out<<val;
 	out.close();
+}
+
+static int get_int(const char *path)
+{
+	int ret = 0;
+	ifstream fp(path);
+	fp>>ret;
+	fp.close();
+
+	return ret;
+}
+
+void populate_vector(const char *path,vector< pair<string,int> > &v)
+{
+	v.clear();
+	vector< pair<string,int> >::iterator it;
+	DIR *dir;
+	dirent *pdir;
+	char buff[128];
+	int val;
+	string name;
+
+	dir = opendir(path);
+	
+	while(pdir = readdir(dir))
+	{
+
+		if(!strcmp(pdir->d_name,"power") || !strcmp(pdir->d_name, "uevent") || 
+			!strcmp(pdir->d_name, "subsystem") || !strcmp(pdir->d_name, ".") ||
+			!strcmp(pdir->d_name, "..") || !strcmp(pdir->d_name, "dev"))
+				continue;
+
+		sprintf(buff,"%s/%s",path,pdir->d_name);
+		val = get_int(buff);
+		name.assign(pdir->d_name);
+		v.push_back(make_pair(name,val));
+	}
+	closedir(dir);
+
+	int cont = 0;
+	for(it = v.begin(); it!=v.end(); ++it,++cont)
+	{
+		name = (*it).first;
+		val = (*it).second;
+		cout<<cont<<": "<<name<<": "<<val<<"\n";
+	}
+		
 }

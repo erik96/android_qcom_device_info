@@ -1,9 +1,11 @@
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 #include "constants.h"
 #include "functions.h"
 #include "classes.h"
+#include "helpers.h"
 
 using namespace std;
 
@@ -12,7 +14,6 @@ void _error(int val)
 	fprintf(stderr,"Invalid value(%d), aborting...\n",val);
 }
 
-
 void tune(int p)
 {
 /*
@@ -20,15 +21,18 @@ void tune(int p)
  * 2 - Vibration Amp
  * 3 - Fast Charge
  * 4 - TCP
- * 5 - Sound Control Parameters -> TODO
+ * 5 - Sound Control Parameters
  * 6 - GPU Up threshold
  * 7 - GPU Down threshold
  * 8 - Max GPU Freq -> FIXME
+ * 9 - Hotplug -> TODO
  */
 
-	int val;
+	int val,nr;
 	SysfsIO TUNNER;
 	string content;
+
+	vector < pair <string,int> > v;
 
 	switch (p)
 	{
@@ -77,6 +81,23 @@ void tune(int p)
 			else
 				return _error(-1);
 			break;
+		case 5:
+			populate_vector(SOUND_CONTROL_PATH,v);
+			fprintf(stdout,"Choose Interface number: ");
+			cin.ignore();
+			fscanf(stdin,"%d",&nr);
+			if(nr>v.size())
+				return _error(val);
+
+			fprintf(stdout,"New Value:");
+			fscanf(stdin,"%d",&val);
+
+			if (val<0 || val>20)
+				return _error(val);
+			else
+				 TUNNER.create_w(SOUND_CONTROL_PATH,v,nr,val);
+			populate_vector(SOUND_CONTROL_PATH,v);
+			break;
 			
 		case 6:
 			getExtraKernelInfo(p);
@@ -112,6 +133,10 @@ void tune(int p)
 				getGPUInfo(p);
 			else
 				return _error(-1);
+			break;
+
+		case 9: //TODO::
+			populate_vector(HOTPLUG_PATH,v);
 			break;
 			
 		default:
