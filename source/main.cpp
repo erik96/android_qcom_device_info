@@ -6,12 +6,11 @@
 #include "functions.h"
 #include "helpers.h"
 
-#define ver "0.9.71_alpha"
+#define ver "0.9.72_alpha"
 
 using namespace std;
 
 unsigned short ch;
-vector < pair <string,int> > v;
 
 static void menu(void);
 static void AdvancedMenu(void);
