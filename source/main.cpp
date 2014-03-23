@@ -6,7 +6,7 @@
 #include "functions.h"
 #include "helpers.h"
 
-#define ver "0.9.72_alpha"
+#define ver "0.9.73_alpha"
 
 using namespace std;
 

@@ -25,7 +25,9 @@ void tune(int p)
  * 6 - GPU Up threshold
  * 7 - GPU Down threshold
  * 8 - Max GPU Freq -> FIXME
- * 9 - Hotplug -> TODO
+ * 9 - Hotplug
+ * 10 - Governor control -> TODO
+ * 11 - CPU Freq Control -> TODO
  */
 
 	int val,nr;
@@ -87,7 +89,7 @@ void tune(int p)
 			cin.ignore();
 			fscanf(stdin,"%d",&nr);
 			if(nr>v.size())
-				return _error(val);
+				return _error(nr);
 
 			fprintf(stdout,"New Value:");
 			fscanf(stdin,"%d",&val);
@@ -135,10 +137,21 @@ void tune(int p)
 				return _error(-1);
 			break;
 
-		case 9: //TODO::
+		case 9:
 			populate_vector(HOTPLUG_PATH,v);
+			fprintf(stdout,"Choose Interface number: ");
+			cin.ignore();
+			fscanf(stdin,"%d",&nr);
+
+			if(nr>v.size())
+				return _error(nr);
+
+			fprintf(stdout,"New Value:");
+			fscanf(stdin,"%d",&val);
+
+			TUNNER.create_w(HOTPLUG_PATH,v,nr,val);
+			populate_vector(SOUND_CONTROL_PATH,v);
 			break;
-			
 		default:
 			break;
 	}
