@@ -1,3 +1,6 @@
+#ifndef FUNCTIONS_HPP
+#define FUNCTIONS_HPP
+
 #include <string>
 
 #define SIZE 1024
@@ -34,3 +37,5 @@ void getExtraKernelInfo(int p);
 /* CUSTOMIZER */
 
 void tune(int p);
+
+#endif //FUNCTIONS_HPP

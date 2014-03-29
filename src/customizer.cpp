@@ -2,10 +2,10 @@
 #include <iostream>
 #include <vector>
 
-#include "constants.h"
-#include "functions.h"
-#include "classes.h"
-#include "helpers.h"
+#include <constants.hpp>
+#include <functions.hpp>
+#include <classes.hpp>
+#include <helpers.hpp>
 
 using namespace std;
 
@@ -32,9 +32,9 @@ void tune(int p)
 
 	int val,nr;
 	SysfsIO TUNNER;
+	SysfsVector V_TUNNER;
 	string content;
 
-	vector < pair <string,int> > v;
 
 	switch (p)
 	{
@@ -84,11 +84,12 @@ void tune(int p)
 				return _error(-1);
 			break;
 		case 5:
-			populate_vector(SOUND_CONTROL_PATH,v);
+			V_TUNNER.populate_vector(SOUND_CONTROL_PATH);
+			V_TUNNER.print_vector();
 			fprintf(stdout,"Choose Interface number: ");
 			cin.ignore();
 			fscanf(stdin,"%d",&nr);
-			if(nr>v.size())
+			if(nr>V_TUNNER.vsize())
 				return _error(nr);
 
 			fprintf(stdout,"New Value:");
@@ -97,8 +98,9 @@ void tune(int p)
 			if (val<0 || val>20)
 				return _error(val);
 			else
-				 TUNNER.create_w(SOUND_CONTROL_PATH,v,nr,val);
-			populate_vector(SOUND_CONTROL_PATH,v);
+				 V_TUNNER.write_vector(nr,val);
+			V_TUNNER.populate_vector(SOUND_CONTROL_PATH);
+			V_TUNNER.print_vector();
 			break;
 			
 		case 6:
@@ -138,19 +140,21 @@ void tune(int p)
 			break;
 
 		case 9:
-			populate_vector(HOTPLUG_PATH,v);
+			V_TUNNER.populate_vector(HOTPLUG_PATH);
+			V_TUNNER.print_vector();
 			fprintf(stdout,"Choose Interface number: ");
 			cin.ignore();
 			fscanf(stdin,"%d",&nr);
 
-			if(nr>v.size())
+			if(nr>V_TUNNER.vsize())
 				return _error(nr);
 
 			fprintf(stdout,"New Value:");
 			fscanf(stdin,"%d",&val);
 
-			TUNNER.create_w(HOTPLUG_PATH,v,nr,val);
-			populate_vector(SOUND_CONTROL_PATH,v);
+			V_TUNNER.write_vector(nr,val);
+			V_TUNNER.populate_vector(HOTPLUG_PATH);
+			V_TUNNER.print_vector();
 			break;
 		default:
 			break;

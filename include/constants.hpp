@@ -1,3 +1,6 @@
+#ifndef CONSTANTS_HPP
+#define CONSTANTS_HPP
+
 /* CPU PATHS */
 
 #define CPU_INFO "/proc/cpuinfo"
@@ -49,3 +52,5 @@
 #define TCP_CONGESTION_ALGORITHM "/proc/sys/net/ipv4/tcp_congestion_control"
 
 #define SOUND_CONTROL_PATH "sys/class/misc/soundcontrol"
+
+#endif //CONSTANTS_HPP

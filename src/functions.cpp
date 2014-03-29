@@ -5,10 +5,10 @@
 #include <unistd.h>
 #include <sstream>
 
-#include "functions.h"
-#include "helpers.h"
-#include "constants.h"
-#include "classes.h"
+#include <functions.hpp>
+#include <helpers.hpp>
+#include <constants.hpp>
+#include <classes.hpp>
 
 using namespace std;
 

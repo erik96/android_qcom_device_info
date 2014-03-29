@@ -1,8 +1,10 @@
 #include <fstream>
 #include <cstring>
 #include <vector>
+#include <iostream>
+#include <dirent.h>
 
-#include "classes.h"
+#include <classes.hpp>
 
 using namespace std;
 
@@ -82,7 +84,25 @@ bool SysfsIO::create_w(string poss_path,string path,string content) {
 	return false;
 }
 
-void SysfsIO::create_w(string path,vector< pair<string,int> > &v, int cont, int val)
+/*------------------------------------------------------------------*/
+
+
+int SysfsVector::get_int(const char *path)
+{
+	int ret = 0;
+	ifstream fp(path);
+	fp>>ret;
+	fp.close();
+
+	return ret;
+}
+
+int SysfsVector::vsize()
+{
+	return v.size()-1;
+}
+
+void SysfsVector::write_vector(int cont, int val)
 {
 	char buff[128];
 	sprintf(buff,"%s/%s",path.c_str(),v[cont].first.c_str());
@@ -92,4 +112,49 @@ void SysfsIO::create_w(string path,vector< pair<string,int> > &v, int cont, int 
 	out<<val;
 	out.close();
 
+}
+
+void SysfsVector::populate_vector(string path)
+{
+	v.clear();
+	DIR *dir;
+	dirent *pdir;
+	char buff[128];
+	int val;
+	string name;
+
+	this->path = path;
+
+	dir = opendir(path.c_str());
+	
+	while(pdir = readdir(dir))
+	{
+
+		if(!strcmp(pdir->d_name,"power") || !strcmp(pdir->d_name, "uevent") || 
+			!strcmp(pdir->d_name, "subsystem") || !strcmp(pdir->d_name, ".") ||
+			!strcmp(pdir->d_name, "..") || !strcmp(pdir->d_name, "dev"))
+				continue;
+
+		sprintf(buff,"%s/%s",path.c_str(),pdir->d_name);
+		val = get_int(buff);
+		name.assign(pdir->d_name);
+		v.push_back(make_pair(name,val));
+	}
+	closedir(dir);
+		
+}
+
+void SysfsVector::print_vector()
+{
+	int val;
+	string name;
+	int cont = 0;
+	vector_pair::iterator it;
+
+	for(it = v.begin(); it!=v.end(); ++it,++cont)
+	{
+		name = (*it).first;
+		val = (*it).second;
+		cout<<cont<<": "<<name<<": "<<val<<"\n";
+	}
 }

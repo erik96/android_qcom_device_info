@@ -1,9 +1,11 @@
-#ifndef CLASSES_H
-#define CLASSES_H
+#ifndef CLASSES_HPP
+#define CLASSES_HPP
 
 #include <string>
 
 using namespace std;
+
+typedef vector< pair<string,int> > vector_pair;
 
 class SysfsIO {
 
@@ -34,4 +36,20 @@ class SysfsIO {
 		
 };
 
-#endif //CLASSES_H
+class SysfsVector {
+
+	private:
+		vector_pair v;
+		string path;
+
+		int get_int(const char *path);
+
+	public:
+		int vsize();
+		void populate_vector(string path);
+		void print_vector();
+		void write_vector(int cont, int val);
+};
+
+
+#endif //CLASSES_HPP

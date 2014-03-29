@@ -1,3 +1,6 @@
+#ifndef HELPERS_HPP
+#define HELPERS_HPP
+
 #include <string>
 #include <vector>
 
@@ -22,3 +25,5 @@ void ExecuteScript(const char *content);
 void write_to_file(int val, const char *path);
 
 void populate_vector(const char *path,vector< pair<string,int> > &v);
+
+#endif //HELPERS_HPP

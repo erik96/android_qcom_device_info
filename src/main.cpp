@@ -3,10 +3,10 @@
 #include <iostream>
 #include <fstream>
 
-#include "functions.h"
-#include "helpers.h"
+#include <functions.hpp>
+#include <helpers.hpp>
 
-#define ver "0.9.73_alpha"
+#define ver "0.9.74_alpha"
 
 using namespace std;
 
