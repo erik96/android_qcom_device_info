@@ -160,7 +160,7 @@ void tune(int p)
 		case 11:
 			getCPUInfo(p);
 			V_TUNNER.populate_vector(SCALING_AVAILABLE_FREQ,NULL);
-			fprintf(stdout,"1 - Min; 2 - Max: ");
+			fprintf(stdout,"1 - Min, 2 - Max: ");
 			cin.ignore();
 			fscanf(stdin,"%d",&nr);
 

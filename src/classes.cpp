@@ -167,7 +167,7 @@ void SysfsVector::populate_vector(string poss_path, void *f)
 	}
 
 	ifstream in(poss_path.c_str());
-	float val;
+	unsigned long val;
 	if (!in)
 	{
 		fprintf(stderr,"Invalid path: %s\n", poss_path.c_str());
@@ -206,7 +206,7 @@ void SysfsVector::print_vector(void *f)
 		return;
 	}
 
-	vector <double>::iterator it;
+	vector <unsigned long>::iterator it;
 	int cont = 0;
 
 	for(it = vf.begin(); it!=vf.end(); ++it,++cont)

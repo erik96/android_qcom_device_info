@@ -250,8 +250,11 @@ void getDiskInfo()
 
 void getHotPlugInfo()
 {
+	SysfsVector V;	
+
 	fprintf(stdout, "\nHotplug Info:\n");
-	PrintDirContent(HOTPLUG_PATH);
+	V.populate_vector(HOTPLUG_PATH);
+	V.print_vector();
 }
 
 void getGPUInfo(int p)
