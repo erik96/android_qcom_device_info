@@ -6,7 +6,7 @@
 #include <functions.hpp>
 #include <helpers.hpp>
 
-#define ver "0.9.74_alpha"
+#define ver "0.9.75_alpha"
 
 using namespace std;
 
@@ -63,7 +63,7 @@ static void menu()
 				getProperty("ro.build.user",3);
 				break;
 			case 2:
-				getCPUInfo();
+				getCPUInfo(0);
 				break;
 			case 3:
 				getBatteryInfo();

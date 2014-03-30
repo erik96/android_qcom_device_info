@@ -114,6 +114,20 @@ void SysfsVector::write_vector(int cont, int val)
 
 }
 
+bool SysfsVector::write_vector(string path, int cont)
+{
+	if(cont>vf.size()-1)
+		return false;
+
+	ofstream out(path.c_str());
+	this->path = path;
+
+	out<<fixed<<vf[cont];
+	out.close();
+
+	return true;
+}		
+
 void SysfsVector::populate_vector(string path)
 {
 	v.clear();
@@ -144,6 +158,31 @@ void SysfsVector::populate_vector(string path)
 		
 }
 
+void SysfsVector::populate_vector(string poss_path, void *f)
+{
+	if (f)
+	{
+		fprintf(stderr,"Invalid use of %s , aborting...\n", __func__);
+		return;
+	}
+
+	ifstream in(poss_path.c_str());
+	float val;
+	if (!in)
+	{
+		fprintf(stderr,"Invalid path: %s\n", path.c_str());
+		return;
+	}
+
+	this->poss_path = poss_path;
+
+	
+	while(in>>val)
+		vf.push_back(val);
+
+	in.close();
+}
+
 void SysfsVector::print_vector()
 {
 	int val;
@@ -157,4 +196,19 @@ void SysfsVector::print_vector()
 		val = (*it).second;
 		cout<<cont<<": "<<name<<": "<<val<<"\n";
 	}
+}
+
+void SysfsVector::print_vector(void *f)
+{
+	if (f)
+	{
+		fprintf(stderr,"Invalid use of %s , aborting...", __func__);
+		return;
+	}
+
+	vector <double>::iterator it;
+	int cont = 0;
+
+	for(it = vf.begin(); it!=vf.end(); ++it,++cont)
+		cout<<fixed<<cont<<": "<<*it<<"\n";
 }

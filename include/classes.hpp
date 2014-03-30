@@ -29,10 +29,6 @@ class SysfsIO {
 		void create_w(string path, string content);
 
 		bool create_w(string poss_path,string path,string content);
-
-		void create_w(string path,vector< pair<string,int> > &v, int cont, int val);
-		
-
 		
 };
 
@@ -40,15 +36,20 @@ class SysfsVector {
 
 	private:
 		vector_pair v;
+		vector <double> vf;
 		string path;
+		string poss_path;
 
 		int get_int(const char *path);
 
 	public:
 		int vsize();
 		void populate_vector(string path);
+		void populate_vector(string path,void *f);
 		void print_vector();
+		void print_vector(void *f);
 		void write_vector(int cont, int val);
+		bool write_vector(string path, int cont);
 };
 
 

@@ -9,7 +9,7 @@ using namespace std;
 
 void getProperty(string line1, unsigned short s);
 
-void getCPUInfo();
+void getCPUInfo(int p);
 
 void getBatteryInfo();
 

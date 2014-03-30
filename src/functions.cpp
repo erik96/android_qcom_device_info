@@ -62,24 +62,30 @@ void getProperty(string line1, unsigned short s)
 	fp.close();
 }
 
-void getCPUInfo()
+void getCPUInfo(int p)
 {
 	SysfsIO CPU;
+
+	if (!p)
+	{
+		fprintf(stdout,"CPU Informations: \n%s", CPU.create_rbuff(CPU_INFO).c_str());
 	
-	fprintf(stdout,"CPU Informations: \n%s", CPU.create_rbuff(CPU_INFO).c_str());
-	
-	fprintf(stdout,"\nCurrent CPU Freq: %s\n", CPU.create_rline(CURRENT_CPU_FREQ).c_str());
+		fprintf(stdout,"\nCurrent CPU Freq: %s\n", CPU.create_rline(CURRENT_CPU_FREQ).c_str());
+	}
+	if(!p || p == 11)
+	{
+		fprintf(stdout,"Current Max CPU Freq: %s\n", CPU.create_rline(CURRENT_MAX_CPU_FREQ).c_str());
 
-	fprintf(stdout,"Current Max CPU Freq: %s\n", CPU.create_rline(CURRENT_MAX_CPU_FREQ).c_str());
+		fprintf(stdout,"Current Min CPU Freq: %s\n", CPU.create_rline(CURRENT_MIN_CPU_FREQ).c_str());
 
-	fprintf(stdout,"Current Min CPU Freq: %s\n", CPU.create_rline(CURRENT_MIN_CPU_FREQ).c_str());	
-	
-	fprintf(stdout,"Current CPU Governor: %s\n", CPU.create_rline(CURRENT_CPU_GOV).c_str());
+		fprintf(stdout,"Scaling available frequencies: %s\n", CPU.create_rline(SCALING_AVAILABLE_FREQ).c_str());
+	}
+	if (!p || p == 10)
+	{
+		fprintf(stdout,"Current CPU Governor: %s\n", CPU.create_rline(CURRENT_CPU_GOV).c_str());
 
-        fprintf(stdout,"Scaling available frequencies: %s\n", CPU.create_rline(SCALING_AVAILABLE_FREQ).c_str());
-
-        fprintf(stdout,"Scaling available governors: %s\n", CPU.create_rline(SCALING_AVAILABLE_GOVS).c_str());
-
+        	fprintf(stdout,"Scaling available governors: %s\n", CPU.create_rline(SCALING_AVAILABLE_GOVS).c_str());
+	}
 }
 
 bool getVddLevels()

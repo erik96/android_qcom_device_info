@@ -27,7 +27,7 @@ void tune(int p)
  * 8 - Max GPU Freq -> FIXME
  * 9 - Hotplug
  * 10 - Governor control -> TODO
- * 11 - CPU Freq Control -> TODO
+ * 11 - CPU Freq Control
  */
 
 	int val,nr;
@@ -155,6 +155,43 @@ void tune(int p)
 			V_TUNNER.write_vector(nr,val);
 			V_TUNNER.populate_vector(HOTPLUG_PATH);
 			V_TUNNER.print_vector();
+			break;
+
+		case 11:
+			getCPUInfo(p);
+			V_TUNNER.populate_vector(SCALING_AVAILABLE_FREQ,NULL);
+			fprintf(stdout,"1 - Min; 2 - Max: ");
+			cin.ignore();
+			fscanf(stdin,"%d",&nr);
+
+			if (nr == 1)
+			{
+				fprintf(stdout,"Choose new MIN value:");
+				V_TUNNER.print_vector(NULL);
+				cin.ignore();
+				fscanf(stdin,"%d",&val);
+				
+				if(V_TUNNER.write_vector(CURRENT_MIN_CPU_FREQ,val))
+					getCPUInfo(p);
+				else
+					return _error(val);
+			}
+			else if (nr == 2)
+			{
+				fprintf(stdout,"Choose new MAX value:\n");
+				V_TUNNER.print_vector(NULL);
+				cin.ignore();
+				fscanf(stdin,"%d",&val);
+				
+				if(V_TUNNER.write_vector(CURRENT_MAX_CPU_FREQ,val))
+					getCPUInfo(p);
+
+				else
+					return _error(val);
+			}
+			else
+				return _error(nr);
+
 			break;
 		default:
 			break;
