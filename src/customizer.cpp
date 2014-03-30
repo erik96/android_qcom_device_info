@@ -30,11 +30,11 @@ void tune(int p)
  * 11 - CPU Freq Control
  */
 
-	int val,nr;
+	int val;
+	unsigned int nr;
 	SysfsIO TUNNER;
 	SysfsVector V_TUNNER;
 	string content;
-
 
 	switch (p)
 	{
@@ -89,7 +89,7 @@ void tune(int p)
 			fprintf(stdout,"Choose Interface number: ");
 			cin.ignore();
 			fscanf(stdin,"%d",&nr);
-			if(nr>V_TUNNER.vsize())
+			if(nr>V_TUNNER.vsize()-1)
 				return _error(nr);
 
 			fprintf(stdout,"New Value:");
@@ -146,7 +146,7 @@ void tune(int p)
 			cin.ignore();
 			fscanf(stdin,"%d",&nr);
 
-			if(nr>V_TUNNER.vsize())
+			if(nr>V_TUNNER.vsize()-1)
 				return _error(nr);
 
 			fprintf(stdout,"New Value:");
@@ -197,5 +197,3 @@ void tune(int p)
 			break;
 	}
 }
-
-

@@ -20,7 +20,7 @@ bool IsNexus5()
 
 	if (!fp)
 	{
-		fprintf(stderr,"%s\n","Unable to open input file");
+		fprintf(stderr,"Unable to open input file\n");
 		return false;
 	}
 
@@ -119,7 +119,7 @@ void PrintDirContent(const char *path)
 
 	dir = opendir(path);
 	
-	while(pdir = readdir(dir))
+	while((pdir = readdir(dir)))
 	{
 
 		if(!strcmp(pdir->d_name,"power") || !strcmp(pdir->d_name, "uevent") || 

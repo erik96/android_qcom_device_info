@@ -7,7 +7,7 @@
 #include <functions.hpp>
 #include <helpers.hpp>
 
-#define ver "0.9.76_beta"
+#define version "0.9.76_beta"
 
 using namespace std;
 
@@ -45,7 +45,7 @@ static void ShowMenu()
 	if (IsNexus5())
 		fprintf(stdout,"You are running Nexus 5\n");
 
-	fprintf(stdout, "Qualcomm Device Info v%s by educk@XDA-Dev.com\n",ver);
+	fprintf(stdout, "Qualcomm Device Info v%s by educk@XDA-Dev.com\n",version);
 	fprintf(stdout, "Options:\n"
 			"1: Get ROM Information\n" 
 			"2: Get CPU Information\n"
@@ -238,7 +238,6 @@ static void AdvancedMenu()
 
 static void SysfsTunner()
 {
-
 	do
 	{
 		ShowSysfsTunner();

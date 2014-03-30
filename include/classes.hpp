@@ -43,13 +43,13 @@ class SysfsVector {
 		int get_int(const char *path);
 
 	public:
-		int vsize();
+		unsigned int vsize();
 		void populate_vector(string path);
 		void populate_vector(string path,void *f);
 		void print_vector();
 		void print_vector(void *f);
-		void write_vector(int cont, int val);
-		bool write_vector(string path, int cont);
+		void write_vector(unsigned int cont, int val);
+		bool write_vector(string path, unsigned int cont);
 };
 
 

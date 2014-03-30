@@ -97,12 +97,12 @@ int SysfsVector::get_int(const char *path)
 	return ret;
 }
 
-int SysfsVector::vsize()
+unsigned int SysfsVector::vsize()
 {
-	return v.size()-1;
+	return v.size();
 }
 
-void SysfsVector::write_vector(int cont, int val)
+void SysfsVector::write_vector(unsigned int cont, int val)
 {
 	char buff[128];
 	sprintf(buff,"%s/%s",path.c_str(),v[cont].first.c_str());
@@ -114,7 +114,7 @@ void SysfsVector::write_vector(int cont, int val)
 
 }
 
-bool SysfsVector::write_vector(string path, int cont)
+bool SysfsVector::write_vector(string path, unsigned int cont)
 {
 	if(cont>vf.size()-1)
 		return false;
@@ -141,7 +141,7 @@ void SysfsVector::populate_vector(string path)
 
 	dir = opendir(path.c_str());
 	
-	while(pdir = readdir(dir))
+	while((pdir = readdir(dir)))
 	{
 
 		if(!strcmp(pdir->d_name,"power") || !strcmp(pdir->d_name, "uevent") || 
