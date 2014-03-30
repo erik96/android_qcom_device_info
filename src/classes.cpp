@@ -170,7 +170,7 @@ void SysfsVector::populate_vector(string poss_path, void *f)
 	float val;
 	if (!in)
 	{
-		fprintf(stderr,"Invalid path: %s\n", path.c_str());
+		fprintf(stderr,"Invalid path: %s\n", poss_path.c_str());
 		return;
 	}
 
