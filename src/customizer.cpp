@@ -48,7 +48,12 @@ void tune(int p)
 			else
 				 TUNNER.create_w(TEMP_THRESHOLD,val);
 			getExtraKernelInfo(p);
+
+			fprintf(stdout,"\nPress enter to continue");
+			cin.ignore();
+			getline(cin,s);
 			break;
+
 		case 2:
 			getExtraKernelInfo(p);
 			fprintf(stdout,"New Value:");
@@ -59,7 +64,12 @@ void tune(int p)
 			else
 				 TUNNER.create_w(VIBRATION_AMP,val);
 			getExtraKernelInfo(p);
+			
+			fprintf(stdout,"\nPress enter to continue");
+			cin.ignore();
+			getline(cin,s);
 			break;
+
 		case 3:
 			getExtraKernelInfo(p);
 			fprintf(stdout,"New Value(ON:1 OFF:0):");
@@ -70,7 +80,12 @@ void tune(int p)
 			else
 				 TUNNER.create_w(FORCE_FAST_CHARGE,val);
 			getExtraKernelInfo(p);
+
+			fprintf(stdout,"\nPress enter to continue");
+			cin.ignore();
+			getline(cin,s);
 			break;
+
 		case 4:
 			getExtraKernelInfo(p);
 			fprintf(stdout,"New TCP: ");
@@ -82,7 +97,12 @@ void tune(int p)
 				getExtraKernelInfo(p);
 			else
 				return _error(-1);
+
+			fprintf(stdout,"\nPress enter to continue");
+			cin.ignore();
+			getline(cin,s);
 			break;
+
 		case 5:
 			V_TUNNER.populate_vector(SOUND_CONTROL_PATH);
 			V_TUNNER.print_vector();
@@ -101,6 +121,10 @@ void tune(int p)
 				 V_TUNNER.write_vector(nr,val);
 			V_TUNNER.populate_vector(SOUND_CONTROL_PATH);
 			V_TUNNER.print_vector();
+
+			fprintf(stdout,"\nPress enter to continue");
+			cin.ignore();
+			getline(cin,s);
 			break;
 			
 		case 6:
@@ -113,6 +137,10 @@ void tune(int p)
 			else
 				 TUNNER.create_w(GPU_UP_THRESHOLD,val);
 			getExtraKernelInfo(p);
+
+			fprintf(stdout,"\nPress enter to continue");
+			cin.ignore();
+			getline(cin,s);
 			break;
 		case 7:
 			getExtraKernelInfo(p);
@@ -124,7 +152,12 @@ void tune(int p)
 			else
 				 TUNNER.create_w(GPU_DOWN_THRESHOLD,val);
 			getExtraKernelInfo(p);
+
+			fprintf(stdout,"\nPress enter to continue");
+			cin.ignore();
+			getline(cin,s);
 			break;
+
 		case 8: //FIXME::
 			getGPUInfo(p);
 			getGPUInfo(-1);
@@ -137,6 +170,10 @@ void tune(int p)
 				getGPUInfo(p);
 			else
 				return _error(-1);
+
+			fprintf(stdout,"\nPress enter to continue");
+			cin.ignore();
+			getline(cin,s);
 			break;
 
 		case 9:
@@ -155,18 +192,22 @@ void tune(int p)
 			V_TUNNER.write_vector(nr,val);
 			V_TUNNER.populate_vector(HOTPLUG_PATH);
 			V_TUNNER.print_vector();
+			
+			fprintf(stdout,"\nPress enter to continue");
+			cin.ignore();
+			getline(cin,s);
 			break;
 
 		case 11:
 			getCPUInfo(p);
 			V_TUNNER.populate_vector(SCALING_AVAILABLE_FREQ,NULL);
-			fprintf(stdout,"1 - Min, 2 - Max: ");
+			fprintf(stdout,"1 - Min\n2 - Max:\n");
 			cin.ignore();
 			fscanf(stdin,"%d",&nr);
 
 			if (nr == 1)
 			{
-				fprintf(stdout,"Choose new MIN value:");
+				fprintf(stdout,"Choose new MIN value:\n");
 				V_TUNNER.print_vector(NULL);
 				cin.ignore();
 				fscanf(stdin,"%d",&val);
@@ -192,6 +233,9 @@ void tune(int p)
 			else
 				return _error(nr);
 
+			fprintf(stdout,"\nPress enter to continue");
+			cin.ignore();
+			getline(cin,s);
 			break;
 		default:
 			break;

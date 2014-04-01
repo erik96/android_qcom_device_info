@@ -122,7 +122,7 @@ bool SysfsVector::write_vector(string path, unsigned int cont)
 	ofstream out(path.c_str());
 	this->path = path;
 
-	out<<fixed<<vf[cont];
+	out<<vf[cont];
 	out.close();
 
 	return true;

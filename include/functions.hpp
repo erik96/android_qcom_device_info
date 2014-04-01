@@ -7,6 +7,8 @@
 
 using namespace std;
 
+extern string s;
+
 void getProperty(string line1, unsigned short s);
 
 void getCPUInfo(int p);

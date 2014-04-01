@@ -221,7 +221,6 @@ static void AdvancedMenu()
 				ShowAdvancedMenu();
 				break;
 			case 4:
-				ShowSysfsTunner();
 				return SysfsTunner();
 
 			default:
