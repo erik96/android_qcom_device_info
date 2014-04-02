@@ -200,6 +200,25 @@ void tune(int p)
 			getline(cin,s);
 			break;
 
+		case 10:
+			getCPUInfo(p);
+			V_TUNNER.populate_vector(SCALING_AVAILABLE_GOVS,NULL);
+			V_TUNNER.print_vector(NULL);
+
+			fprintf(stdout,"Choose new governor number: ");
+			cin.ignore();
+			fscanf(stdin,"%d",&nr);
+
+			if(V_TUNNER.write_vector(CURRENT_CPU_GOV,nr))
+					getCPUInfo(p);
+			else
+				return _error(nr);
+
+			fprintf(stdout,"\nPress enter to continue");
+			cin.ignore();
+			getline(cin,s);
+			break;
+
 		case 11:
 			getCPUInfo(p);
 			V_TUNNER.populate_vector(SCALING_AVAILABLE_FREQ,NULL);

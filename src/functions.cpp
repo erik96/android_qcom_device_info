@@ -81,11 +81,10 @@ void getCPUInfo(int p)
 		fprintf(stdout,"Scaling available frequencies: %s\n", CPU.create_rline(SCALING_AVAILABLE_FREQ).c_str());
 	}
 	if (!p || p == 10)
-	{
 		fprintf(stdout,"Current CPU Governor: %s\n", CPU.create_rline(CURRENT_CPU_GOV).c_str());
 
+	if (!p)
         	fprintf(stdout,"Scaling available governors: %s\n", CPU.create_rline(SCALING_AVAILABLE_GOVS).c_str());
-	}
 }
 
 bool getVddLevels()

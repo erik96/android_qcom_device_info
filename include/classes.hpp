@@ -36,7 +36,7 @@ class SysfsVector {
 
 	private:
 		vector_pair v;
-		vector <unsigned long> vf;
+		vector <string> vf;
 		string path;
 		string poss_path;
 
