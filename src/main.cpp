@@ -7,7 +7,7 @@
 #include <functions.hpp>
 #include <helpers.hpp>
 
-#define version "0.9.76_beta"
+#define version "0.9.77_beta"
 
 using namespace std;
 
@@ -81,7 +81,7 @@ static void ShowSysfsTunner()
 			"5 - Sound Control Parameters\n"
 			"6 - GPU Up threshold\n"
 			"7 - GPU Down threshold\n"
-			"8 - Max GPU Freq[WIP]\n"
+			"8 - Max GPU Freq\n"
 			"9 - Hotplug\n"
 			"10 - Governor control[WIP]\n"
 			"11 - CPU Freq Control\n"

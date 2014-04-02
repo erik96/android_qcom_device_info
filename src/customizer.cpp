@@ -24,7 +24,7 @@ void tune(int p)
  * 5 - Sound Control Parameters
  * 6 - GPU Up threshold
  * 7 - GPU Down threshold
- * 8 - Max GPU Freq -> FIXME
+ * 8 - Max GPU Freq
  * 9 - Hotplug
  * 10 - Governor control -> TODO
  * 11 - CPU Freq Control
@@ -158,18 +158,20 @@ void tune(int p)
 			getline(cin,s);
 			break;
 
-		case 8: //FIXME::
+		case 8:
 			getGPUInfo(p);
 			getGPUInfo(-1);
-			fprintf(stdout,"New Max GPU Freq: ");
+			V_TUNNER.populate_vector(GPU_AVAILABLE_FREQ,NULL);
+			fprintf(stdout,"Choose new MAX GPU Freq value:\n");
+			V_TUNNER.print_vector(NULL);
+			
 			cin.ignore();
-			getline(cin,content);
-
-			if(TUNNER.create_w(GPU_AVAILABLE_FREQ,
-						GPU_MAX_FREQ,content))
+			fscanf(stdin,"%d",&val);
+				
+			if(V_TUNNER.write_vector(GPU_MAX_FREQ,val))
 				getGPUInfo(p);
 			else
-				return _error(-1);
+				return _error(val);
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
@@ -201,7 +203,7 @@ void tune(int p)
 		case 11:
 			getCPUInfo(p);
 			V_TUNNER.populate_vector(SCALING_AVAILABLE_FREQ,NULL);
-			fprintf(stdout,"1 - Min\n2 - Max:\n");
+			fprintf(stdout,"1 - Min\n2 - Max\nValue: ");
 			cin.ignore();
 			fscanf(stdin,"%d",&nr);
 

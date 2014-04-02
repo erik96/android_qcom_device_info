@@ -174,6 +174,7 @@ void SysfsVector::populate_vector(string poss_path, void *f)
 		return;
 	}
 
+	vf.clear();
 	this->poss_path = poss_path;
 
 	
