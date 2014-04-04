@@ -140,6 +140,12 @@ void SysfsVector::populate_vector(string path)
 	this->path = path;
 
 	dir = opendir(path.c_str());
+	if(!dir)
+	{
+		fprintf(stderr,"Invalid use of %s , aborting...\n", __func__);
+		return;
+	}
+		
 	
 	while((pdir = readdir(dir)))
 	{

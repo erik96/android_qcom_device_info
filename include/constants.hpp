@@ -11,6 +11,10 @@
 #define SCALING_AVAILABLE_FREQ "/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies"
 #define SCALING_AVAILABLE_GOVS "/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors"
 
+#define INTELLIPLUG "/sys/module/intelli_plug/parameters/intelli_plug_active"
+#define ECO_MODE "/sys/module/intelli_plug/parameters/eco_mode_active"
+#define SNAKE_CHARMER "/sys/kernel/msm_cpufreq_limit/cpufreq_limit"
+
 /* GPU PATHS */
 
 #define GPU_UP_THRESHOLD "/sys/module/msm_kgsl_core/parameters/up_threshold"
@@ -19,6 +23,8 @@
 #define GPU_AVAILABLE_FREQ "/sys/class/kgsl/kgsl-3d0/gpu_available_frequencies"
 #define GPU_MAX_FREQ "/sys/class/kgsl/kgsl-3d0/max_gpuclk"
 #define GPU_CURRENT_FREQ "/sys/class/kgsl/kgsl-3d0/gpuclk"
+
+
 
 /* BATTERY PATHS */
 
@@ -52,5 +58,7 @@
 #define TCP_CONGESTION_ALGORITHM "/proc/sys/net/ipv4/tcp_congestion_control"
 
 #define SOUND_CONTROL_PATH "sys/class/misc/soundcontrol"
+
+#define INTELLITHERMAL "/sys/module/msm_thermal/parameters/enabled"
 
 #endif //CONSTANTS_HPP

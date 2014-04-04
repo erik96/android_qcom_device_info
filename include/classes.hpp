@@ -40,9 +40,10 @@ class SysfsVector {
 		string path;
 		string poss_path;
 
-		int get_int(const char *path);
 
 	public:
+		static int get_int(const char *path);
+
 		unsigned int vsize();
 		void populate_vector(string path);
 		void populate_vector(string path,void *f);

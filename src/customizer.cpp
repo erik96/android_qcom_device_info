@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <cstring>
 
 #include <constants.hpp>
 #include <functions.hpp>
@@ -28,6 +29,10 @@ void tune(int p)
  * 9 - Hotplug
  * 10 - Governor control -> TODO
  * 11 - CPU Freq Control
+ * 12 - Eco Mode
+ * 13 - INTELLIPLUG
+ * 14 - Snake Charmer
+ * 15 - Intellithermal
  */
 
 	int val;
@@ -35,6 +40,7 @@ void tune(int p)
 	SysfsIO TUNNER;
 	SysfsVector V_TUNNER;
 	string content;
+	char c;
 
 	switch (p)
 	{
@@ -179,6 +185,11 @@ void tune(int p)
 			break;
 
 		case 9:
+			if (!Has(HOTPLUG_PATH)) {
+				fprintf(stderr,"Hotplug is not supported\n");
+				return;
+			}
+
 			V_TUNNER.populate_vector(HOTPLUG_PATH);
 			V_TUNNER.print_vector();
 			fprintf(stdout,"Choose Interface number: ");
@@ -258,6 +269,25 @@ void tune(int p)
 			cin.ignore();
 			getline(cin,s);
 			break;
+
+		case 12:
+			fprintf(stdout,"Eco Mode is %s, switch?(y/n): ",
+						c_convert(SysfsVector::get_int(ECO_MODE)).c_str());
+
+			cin.ignore();
+			fscanf(stdin," %c",&c);
+
+			if(c == 'y' || c == 'Y')
+				TUNNER.create_w(ECO_MODE,!SysfsVector::get_int(ECO_MODE));
+
+			fprintf(stdout,"Eco Mode is %s\n",
+						c_convert(SysfsVector::get_int(ECO_MODE)).c_str());
+
+			fprintf(stdout,"\nPress enter to continue");
+			cin.ignore();
+			getline(cin,s);
+			break;
+					
 		default:
 			break;
 	}

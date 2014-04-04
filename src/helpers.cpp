@@ -42,23 +42,6 @@ bool IsNexus5()
 	return false;
 }
 
-bool FileExists(const char *filename)
-{
-	bool ret;
-	ifstream in(filename);
-
-	if (in) {
-		ret = true;
-	}
-	else {
-		ret = false;
-	}
-
-	in.close();
-
-	return ret;
-}
-
 bool IsOn(const char *infile)
 {
 	bool ret;
@@ -164,4 +147,40 @@ void write_to_file(int val, const char *path)
 	ofstream out(path);
 	out<<val;
 	out.close();
+}
+
+bool Has(const char *path)
+{
+	DIR *dir = opendir(path);
+
+	if(dir)
+	{
+		closedir(dir);
+		return true;
+	}
+	return false;
+}
+
+bool Has(const char *path, void *f)
+{
+	ifstream fin(path);
+	
+	if (fin)
+	{
+		fin.close();
+		return true;
+	}
+	else
+		return false;
+}
+
+string c_convert(int i)
+{
+	string ret;
+	if(i)
+		ret.assign("ON");
+	else
+		ret.assign("OFF");
+
+	return ret;
 }

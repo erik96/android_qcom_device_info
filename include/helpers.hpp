@@ -8,8 +8,6 @@ using namespace std;
 
 bool IsNexus5();
 
-bool FileExists(const char *filename);
-
 bool IsOn(const char *infile);
 
 string BuffFile(const char *infile);
@@ -24,6 +22,10 @@ void ExecuteScript(const char *content);
 
 void write_to_file(int val, const char *path);
 
-void populate_vector(const char *path,vector< pair<string,int> > &v);
+bool Has(const char *path);
+
+bool Has(const char *path, void *f);
+
+string c_convert(int i);
 
 #endif //HELPERS_HPP

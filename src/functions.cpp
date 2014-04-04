@@ -92,7 +92,7 @@ bool getVddLevels()
 	ifstream in;
 	if (IsNexus5())
 		in.open("sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table");
-	if (IsNexus5() && !FileExists("sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table"))
+	if (IsNexus5() && !Has("sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table",NULL))
 		in.open("/sys/devices/system/cpu/cpufreq/vdd_table/vdd_levels");
 	if (!IsNexus5())
 		in.open("sys/devices/system/cpu/cpu0/cpufreq/vdd_levels");

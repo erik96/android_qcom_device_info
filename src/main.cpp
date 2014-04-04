@@ -6,8 +6,10 @@
 
 #include <functions.hpp>
 #include <helpers.hpp>
+#include <constants.hpp>
 
-#define version "0.9.78_beta"
+#define version "0.9.79_beta"
+#define CH_LIMIT 12
 
 using namespace std;
 
@@ -55,17 +57,20 @@ static void ShowMenu()
 			"6: Dump logcat and last_kmsg (store them to /sdcard/logs/)\n"
 			"7: Get VM Stats\n"
 			"8: Get RAM Informations\n"
-			"9: Get Disk Informations\n"
-			"10: Nexus 5 Extras[WIP]\n"
-			"0: Quit\n");
+			"9: Get Disk Informations\n");
+	if(IsNexus5())
+		fprintf(stdout,"10: Nexus 5 Extras[WIP]\n");
+
+	fprintf(stdout,"0: Quit\n");
 	return;
 }
 
 static void ShowAdvancedMenu()
 {
-	fprintf(stdout,"\nAdvanced Options:\n"
-			"1: Get HotPlug Info\n"
-			"2: Get GPU Info\n"
+	fprintf(stdout,"\nAdvanced Options:\n");
+		if(Has(HOTPLUG_PATH))
+			fprintf(stdout,"1: Get HotPlug Info\n");
+		fprintf(stdout,"2: Get GPU Info\n"
 			"3: Get Extra Kernel Info\n"
 			"4: Sysfs Tunner\n"
 			"0: Back\n");
@@ -85,6 +90,7 @@ static void ShowSysfsTunner()
 			"9 - Hotplug\n"
 			"10 - Governor control\n"
 			"11 - CPU Freq Control\n"
+			"12 - Eco Mode\n"
 			"0: Back\n");
 }
 
@@ -174,10 +180,14 @@ static void menu()
 				ShowMenu();
 				break;
 			case 10:
+				if(!IsNexus5())
+					goto error;
+
 				ShowAdvancedMenu();
 				AdvancedMenu();
 				break;
-			default: 
+			default:
+			error:
 				fprintf(stderr, "Unknown value\n");
 				break;
 		}
@@ -197,6 +207,9 @@ static void AdvancedMenu()
 			case 0:
 				break;
 			case 1:
+				if(!Has(HOTPLUG_PATH))
+					goto error;
+
 				getHotPlugInfo();
 				
 				fprintf(stdout,"\nPress enter to continue");
@@ -224,6 +237,7 @@ static void AdvancedMenu()
 				return SysfsTunner();
 
 			default:
+			error:
 				fprintf(stderr, "Unknown value\n");
 				break;
 		}
@@ -243,7 +257,7 @@ static void SysfsTunner()
 		fprintf(stdout, "Value: ");
 		fscanf(stdin,"%hu",&ch);
 
-		if (ch>=0 && ch<=11)
+		if (ch>=0 && ch<=CH_LIMIT)
 			tune(ch);
 		else
 			fprintf(stderr, "Unknown value\n");
