@@ -8,7 +8,7 @@
 #include <helpers.hpp>
 #include <constants.hpp>
 
-#define version "0.9.79_beta"
+#define version "0.9.80_beta"
 #define CH_LIMIT 12
 
 using namespace std;
@@ -78,13 +78,15 @@ static void ShowAdvancedMenu()
 
 static void ShowSysfsTunner()
 {
-	fprintf(stdout,"\nOptions:\n"
-			"1 - CPU Temp Threshold\n"
-			"2 - Vibration Amp\n"
+	fprintf(stdout,"\nOptions:\n");
+			if(Has(TEMP_THRESHOLD,NULL))
+				fprintf(stdout,"1 - CPU Temp Threshold\n");
+	fprintf(stdout, "2 - Vibration Amp\n"
 			"3 - Fast Charge\n"
-			"4 - TCP\n"
-			"5 - Sound Control Parameters\n"
-			"6 - GPU Up threshold\n"
+			"4 - TCP\n");
+		if(Has(SOUND_CONTROL_PATH))
+			fprintf(stdout,"5 - Sound Control Parameters\n");
+	fprintf(stdout, "6 - GPU Up threshold\n"
 			"7 - GPU Down threshold\n"
 			"8 - Max GPU Freq\n"
 			"9 - Hotplug\n"

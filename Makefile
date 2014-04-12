@@ -1,4 +1,4 @@
-LOCAL_CFLAGS = -static -march=armv5 -O2
+LOCAL_CFLAGS = -static -march=armv5 -std=c++11 -O2
 
 LOCAL_SRC_FILES = src/main.cpp src/functions.cpp src/helpers.cpp src/customizer.cpp \
 		src/classes.cpp

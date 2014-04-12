@@ -1,12 +1,9 @@
 #include <cstring>
 #include <fstream>
-#include <sys/stat.h>
 #include <unistd.h>
-#include <cstdlib>
 #include <dirent.h>
 #include <vector>
 #include <string>
-#include <iostream>
 
 #include <helpers.hpp>
 
@@ -183,4 +180,15 @@ string c_convert(int i)
 		ret.assign("OFF");
 
 	return ret;
+}
+
+string getPath(vector<string> &poss)
+{
+	unsigned int i;
+
+	for (i = 0; i<poss.size(); i++)
+		if (Has(poss[i].c_str(),NULL))
+			break;
+
+	return poss[i];
 }

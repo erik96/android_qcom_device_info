@@ -1,7 +1,6 @@
 #ifndef HELPERS_HPP
 #define HELPERS_HPP
 
-#include <string>
 #include <vector>
 
 using namespace std;
@@ -27,5 +26,7 @@ bool Has(const char *path);
 bool Has(const char *path, void *f);
 
 string c_convert(int i);
+
+string getPath(vector<string> &poss);
 
 #endif //HELPERS_HPP

@@ -1,9 +1,10 @@
 #include <fstream>
 #include <cstring>
-#include <cstdlib>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <sstream>
+#include <string>
+#include <vector>
 
 #include <functions.hpp>
 #include <helpers.hpp>
@@ -88,14 +89,15 @@ void getCPUInfo(int p)
 }
 
 bool getVddLevels()
-{
-	ifstream in;
-	if (IsNexus5())
-		in.open("sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table");
-	if (IsNexus5() && !Has("sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table",NULL))
-		in.open("/sys/devices/system/cpu/cpufreq/vdd_table/vdd_levels");
-	if (!IsNexus5())
-		in.open("sys/devices/system/cpu/cpu0/cpufreq/vdd_levels");
+{	
+	vector<string> poss = { "/sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table",
+				"/sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table",
+				"/sys/devices/system/cpu/cpufreq/vdd_table/vdd_levels",
+				"/sys/devices/system/cpu/cpu0/cpufreq/vdd_levels" };
+
+	ifstream in(getPath(poss).c_str());
+
+
 	if (!in)
 	{
 		fprintf(stderr,"Your kernel doesn't support VDD Sysfs interface\n");
@@ -281,10 +283,6 @@ void getGPUInfo(int p)
 void getExtraKernelInfo(int p)
 {
 	SysfsIO EXTRA;
-	char FastChargeStatus[] = "OFF";
-
-	if (IsOn(FORCE_FAST_CHARGE))
-		strcpy(FastChargeStatus, "ON");
 
 	if(!p)
 		fprintf(stdout, "\nExtra Kernel Info:\n");
@@ -296,7 +294,8 @@ void getExtraKernelInfo(int p)
 		fprintf(stdout,"Vibration Amp: %s\n", EXTRA.create_rline(VIBRATION_AMP).c_str());
 
 	if(!p || p == 3)
-		fprintf(stdout,"Fast charge is: %s\n", FastChargeStatus);
+		fprintf(stdout,"Fast charge is: %s\n", 
+			c_convert(SysfsVector::get_int(FORCE_FAST_CHARGE)).c_str());
 
 	if(!p || p == 4)
 		fprintf(stdout,"Available TCP Congestion Algorithm: %s\n", EXTRA.create_rline(AVAILABLE_TCP_CONGESTION_ALGORITHM).c_str());

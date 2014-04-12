@@ -27,7 +27,7 @@ void tune(int p)
  * 7 - GPU Down threshold
  * 8 - Max GPU Freq
  * 9 - Hotplug
- * 10 - Governor control -> TODO
+ * 10 - Governor control
  * 11 - CPU Freq Control
  * 12 - Eco Mode
  * 13 - INTELLIPLUG
@@ -45,6 +45,9 @@ void tune(int p)
 	switch (p)
 	{
 		case 1:
+			if(!Has(TEMP_THRESHOLD))
+				return _error(-1); //TEMP FIX
+
 			getExtraKernelInfo(p);
 			fprintf(stdout,"New Value:");
 			fscanf(stdin,"%d",&val);
@@ -109,7 +112,7 @@ void tune(int p)
 			getline(cin,s);
 			break;
 
-		case 5:
+		case 5: //FIXME
 			V_TUNNER.populate_vector(SOUND_CONTROL_PATH);
 			V_TUNNER.print_vector();
 			fprintf(stdout,"Choose Interface number: ");
@@ -282,6 +285,24 @@ void tune(int p)
 
 			fprintf(stdout,"Eco Mode is %s\n",
 						c_convert(SysfsVector::get_int(ECO_MODE)).c_str());
+
+			fprintf(stdout,"\nPress enter to continue");
+			cin.ignore();
+			getline(cin,s);
+			break;
+
+		case 13:
+			fprintf(stdout,"Intelliplug is %s, switch?(y/n): ",
+						c_convert(SysfsVector::get_int(INTELLIPLUG)).c_str());
+
+			cin.ignore();
+			fscanf(stdin," %c",&c);
+
+			if(c == 'y' || c == 'Y')
+				TUNNER.create_w(ECO_MODE,!SysfsVector::get_int(INTELLIPLUG));
+
+			fprintf(stdout,"Intelliplug is %s\n",
+						c_convert(SysfsVector::get_int(INTELLIPLUG)).c_str());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
