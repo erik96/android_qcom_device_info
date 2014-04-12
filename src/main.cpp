@@ -9,7 +9,7 @@
 #include <constants.hpp>
 
 #define version "0.9.80_beta"
-#define CH_LIMIT 12
+#define CH_LIMIT 13
 
 using namespace std;
 
@@ -93,6 +93,7 @@ static void ShowSysfsTunner()
 			"10 - Governor control\n"
 			"11 - CPU Freq Control\n"
 			"12 - Eco Mode\n"
+			"13 - INTELLIPLUG\n"
 			"0: Back\n");
 }
 

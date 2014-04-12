@@ -299,7 +299,7 @@ void tune(int p)
 			fscanf(stdin," %c",&c);
 
 			if(c == 'y' || c == 'Y')
-				TUNNER.create_w(ECO_MODE,!SysfsVector::get_int(INTELLIPLUG));
+				TUNNER.create_w(INTELLIPLUG,!SysfsVector::get_int(INTELLIPLUG));
 
 			fprintf(stdout,"Intelliplug is %s\n",
 						c_convert(SysfsVector::get_int(INTELLIPLUG)).c_str());
