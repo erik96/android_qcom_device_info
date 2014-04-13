@@ -8,8 +8,8 @@
 #include <helpers.hpp>
 #include <constants.hpp>
 
-#define version "0.9.80_beta"
-#define CH_LIMIT 13
+#define version "0.9.81_beta"
+#define CH_LIMIT 14
 
 using namespace std;
 
@@ -93,8 +93,10 @@ static void ShowSysfsTunner()
 			"10 - Governor control\n"
 			"11 - CPU Freq Control\n"
 			"12 - Eco Mode\n"
-			"13 - INTELLIPLUG\n"
-			"0: Back\n");
+			"13 - INTELLIPLUG\n");
+		if(Has(INTELLITHERMAL,NULL))
+			fprintf(stdout,"14 - Intellithermal\n");
+			fprintf(stdout,"0: Back\n");
 }
 
 static void menu()

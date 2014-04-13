@@ -10,10 +10,75 @@
 
 using namespace std;
 
-void _error(int val)
+static void _error(int val)
 {
 	fprintf(stderr,"Invalid value(%d), aborting...\n",val);
 }
+
+class FileR {
+	
+	private:
+		char c,*status;
+		int val;
+		string path;
+		bool isChar,on;
+
+	void init()
+	{
+		ifstream in(path.c_str());
+			status = new char[8];
+			strcpy(status,"OFF");
+			on = false;
+
+			if(isChar) {
+				in>>c;
+				if(c == 'Y' || c == 'y') {
+					strcpy(status,"ON");
+					on = true;
+				}
+
+			} else {
+
+				in>>val;
+				if(val) {
+					strcpy(status,"ON");
+					on = true;
+				}
+			}
+			in.close();
+	}
+			
+	public:
+		FileR(string path,bool isChar) {
+			this->path = path;
+			this->isChar = isChar;
+			init();
+		}
+
+	void sswitch()
+	{
+		ofstream out(path.c_str());
+		if(isChar && on) {
+			out<<"N";
+			out.close();
+			return;
+		}
+
+		if (isChar && !on) {
+			out<<"Y";
+			out.close();
+			return;
+		}
+
+		if(!isChar) {
+			out<<(!on);
+			out.close();
+			return;
+		}
+	}
+
+	string stat() { init(); string ret(status); return ret; }
+};
 
 void tune(int p)
 {
@@ -31,8 +96,7 @@ void tune(int p)
  * 11 - CPU Freq Control
  * 12 - Eco Mode
  * 13 - INTELLIPLUG
- * 14 - Snake Charmer
- * 15 - Intellithermal
+ * 14 - Intellithermal
  */
 
 	int val;
@@ -274,41 +338,66 @@ void tune(int p)
 			break;
 
 		case 12:
+		{
+			FileR EM(ECO_MODE,false);
 			fprintf(stdout,"Eco Mode is %s, switch?(y/n): ",
-						c_convert(SysfsVector::get_int(ECO_MODE)).c_str());
+						EM.stat().c_str());
 
 			cin.ignore();
 			fscanf(stdin," %c",&c);
 
 			if(c == 'y' || c == 'Y')
-				TUNNER.create_w(ECO_MODE,!SysfsVector::get_int(ECO_MODE));
+				EM.sswitch();
 
 			fprintf(stdout,"Eco Mode is %s\n",
-						c_convert(SysfsVector::get_int(ECO_MODE)).c_str());
+						EM.stat().c_str());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
 			break;
+		}
 
 		case 13:
+		{
+			FileR IP(INTELLIPLUG,false);
 			fprintf(stdout,"Intelliplug is %s, switch?(y/n): ",
-						c_convert(SysfsVector::get_int(INTELLIPLUG)).c_str());
+						IP.stat().c_str());
 
 			cin.ignore();
 			fscanf(stdin," %c",&c);
 
 			if(c == 'y' || c == 'Y')
-				TUNNER.create_w(INTELLIPLUG,!SysfsVector::get_int(INTELLIPLUG));
+				IP.sswitch();
 
 			fprintf(stdout,"Intelliplug is %s\n",
-						c_convert(SysfsVector::get_int(INTELLIPLUG)).c_str());
+						IP.stat().c_str());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
 			break;
-					
+		}
+
+		case 14:
+		{
+			FileR IT(INTELLITHERMAL,true);
+			fprintf(stdout,"Intellithermal is %s, switch?(y/n): ",IT.stat().c_str());
+
+			cin.ignore();
+			fscanf(stdin," %c",&c);
+
+			if(c == 'y' || c == 'Y')
+				IT.sswitch();
+
+			fprintf(stdout,"Intellithermal is %s\n", IT.stat().c_str());
+
+			fprintf(stdout,"\nPress enter to continue");
+			cin.ignore();
+			getline(cin,s);
+			break;
+		}
+		
 		default:
 			break;
 	}
