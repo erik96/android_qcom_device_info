@@ -2,6 +2,8 @@
 #include <vector>
 #include <iostream>
 
+#include <constants.hpp>
+
 #define HZ 100
 
 using namespace std;
@@ -24,32 +26,26 @@ class TimeInState {
 		vector < pair<long,long> > Frequencies;
 		string path;
 
-
-	public:
-		TimeInState(string path) { this->path = path; }
-
-		void getTimeByCPU()
+		void Read()
 		{
 			ifstream f(path.c_str());
-			if(!f) {
-				cout<<"Invalid path"<<__func__;
-				return;
-			}
+				if(!f) {
+					cout<<"Invalid path "<<__func__;
+					return;
+				}
+
 
 			long x,y;
 			
 			while(f>>x>>y)
 				Frequencies.push_back(make_pair(x,y));
-
 			f.close();
-
-			//TODO:: WRITE VECTOR
 		}
-		
+
 		void Print()
 		{
 			vector < pair<long,long> >::iterator it;
-			cout<<"Freq\tTime in state(minutes)\n";
+			cout<<"\nFreq\tTime in state(minutes)\n";
 			
 			for(it = Frequencies.begin(); it!=Frequencies.end(); ++it)
 			{
@@ -57,13 +53,23 @@ class TimeInState {
 				cout<<(*it).first<<"\t"<<minutes<<"\n";
 			}
 		}
+
+
+	public:
+		TimeInState(string path) { this->path = path; }
+
+		void getTimeByCPU()
+		{
+			Read();
+			Print();	
+		}
+		
 };
 
 
 void ShowTimeInState()
 {
-	TimeInState T("/sys/devices/system/cpu/cpu0/cpufreq/stats/time_in_state");
+	TimeInState T(TIME_IN_STATE);
 
 	T.getTimeByCPU();
-	T.Print();
 }
