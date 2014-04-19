@@ -8,7 +8,7 @@
 #include <helpers.hpp>
 #include <constants.hpp>
 
-#define version "0.9.81_beta"
+#define version "0.9.82_beta"
 #define CH_LIMIT 14
 
 using namespace std;
@@ -60,6 +60,8 @@ static void ShowMenu()
 			"9: Get Disk Informations\n");
 	if(IsNexus5())
 		fprintf(stdout,"10: Nexus 5 Extras[WIP]\n");
+
+		fprintf(stdout,"11: Time in state\n");
 
 	fprintf(stdout,"0: Quit\n");
 	return;
@@ -191,6 +193,15 @@ static void menu()
 				ShowAdvancedMenu();
 				AdvancedMenu();
 				break;
+			case 11:
+				ShowTimeInState();
+
+				fprintf(stdout,"\nPress enter to continue");
+				cin.ignore();
+				getline(cin,s);
+				ShowMenu();
+				break;
+
 			default:
 			error:
 				fprintf(stderr, "Unknown value\n");

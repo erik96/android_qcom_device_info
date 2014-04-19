@@ -40,4 +40,8 @@ void getExtraKernelInfo(int p);
 
 void tune(int p);
 
+/* TIME IN STATE */
+
+void ShowTimeInState();
+
 #endif //FUNCTIONS_HPP
