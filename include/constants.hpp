@@ -14,7 +14,7 @@
 #define INTELLIPLUG "/sys/module/intelli_plug/parameters/intelli_plug_active"
 #define ECO_MODE "/sys/module/intelli_plug/parameters/eco_mode_active"
 #define SNAKE_CHARMER "/sys/kernel/msm_cpufreq_limit/cpufreq_limit"
-#define TIME_IN_STATE "/sys/devices/system/cpu/cpu0/cpufreq/stats/time_in_state";
+#define TIME_IN_STATE "/sys/devices/system/cpu/cpu0/cpufreq/stats/time_in_state"
 
 /* GPU PATHS */
 
@@ -59,6 +59,8 @@
 #define TCP_CONGESTION_ALGORITHM "/proc/sys/net/ipv4/tcp_congestion_control"
 
 #define SOUND_CONTROL_PATH "sys/class/misc/soundcontrol"
+#define FAUX_SOUND "/sys/kernel/sound_control_3"
+#define DYN_FSYNC "/sys/kernel/dyn_fsync/Dyn_fsync_active"
 
 #define INTELLITHERMAL "/sys/module/msm_thermal/parameters/enabled"
 

@@ -8,8 +8,8 @@
 #include <helpers.hpp>
 #include <constants.hpp>
 
-#define version "0.9.82_beta"
-#define CH_LIMIT 14
+#define version "0.9.83_beta"
+#define CH_LIMIT 16
 
 using namespace std;
 
@@ -98,6 +98,11 @@ static void ShowSysfsTunner()
 			"13 - INTELLIPLUG\n");
 		if(Has(INTELLITHERMAL,NULL))
 			fprintf(stdout,"14 - Intellithermal\n");
+		if(Has(DYN_FSYNC,NULL))
+			fprintf(stdout,"15 - Dynamic Fsync\n");
+		if(Has(FAUX_SOUND))
+			fprintf(stdout,"16 - Faux Sound\n");
+
 			fprintf(stdout,"0: Back\n");
 }
 

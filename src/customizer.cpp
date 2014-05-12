@@ -78,6 +78,8 @@ class FileR {
 	}
 
 	string stat() { init(); string ret(status); return ret; }
+
+	~FileR() { delete [] status; }
 };
 
 void tune(int p)
@@ -87,7 +89,7 @@ void tune(int p)
  * 2 - Vibration Amp
  * 3 - Fast Charge
  * 4 - TCP
- * 5 - Sound Control Parameters
+ * 5 - Sound Control Parameters(Franco)
  * 6 - GPU Up threshold
  * 7 - GPU Down threshold
  * 8 - Max GPU Freq
@@ -97,6 +99,8 @@ void tune(int p)
  * 12 - Eco Mode
  * 13 - INTELLIPLUG
  * 14 - Intellithermal
+ * 15 - Dyanimc FSYNC
+ * 16 - FauxSound
  */
 
 	int val;
@@ -397,6 +401,54 @@ void tune(int p)
 			getline(cin,s);
 			break;
 		}
+
+		case 15:
+		{
+			FileR DF(DYN_FSYNC,false);
+			fprintf(stdout,"Dynamic Fsync is %s, switch?(y/n): ",DF.stat().c_str());
+
+			cin.ignore();
+			fscanf(stdin," %c",&c);
+
+			if(c == 'y' || c == 'Y')
+				DF.sswitch();
+
+			fprintf(stdout,"Dynamic Fsync is %s\n", DF.stat().c_str());
+
+			fprintf(stdout,"\nPress enter to continue");
+			cin.ignore();
+			getline(cin,s);
+			break;
+		}
+			
+
+		case 16:
+			if (!Has(FAUX_SOUND)) {
+				fprintf(stderr,"Faux Sound is not supported\n");
+				return;
+			}
+
+			V_TUNNER.populate_vector(FAUX_SOUND);
+			V_TUNNER.print_vector();
+			fprintf(stdout,"Choose Interface number: ");
+			cin.ignore();
+			fscanf(stdin,"%d",&nr);
+
+			if(nr>V_TUNNER.vsize()-1)
+				return _error(nr);
+
+			fprintf(stdout,"New Value:");
+			fscanf(stdin,"%d",&val);
+
+			V_TUNNER.write_vector(nr,val);
+			V_TUNNER.populate_vector(FAUX_SOUND);
+			V_TUNNER.print_vector();
+			
+			fprintf(stdout,"\nPress enter to continue");
+			cin.ignore();
+			getline(cin,s);
+			break;	
+	  
 		
 		default:
 			break;
