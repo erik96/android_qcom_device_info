@@ -3,15 +3,18 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <map>
 
 #include <functions.hpp>
 #include <helpers.hpp>
 #include <constants.hpp>
 
-#define version "0.9.83_beta"
+#define version "0.9.84_beta"
 #define CH_LIMIT 16
 
 using namespace std;
+
+map <int,string> smap; 
 
 unsigned short ch;
 string s;
@@ -21,13 +24,16 @@ static void AdvancedMenu(void);
 static void SysfsTunner(void);
 static void ShowMenu(void);
 static void ShowAdvancedMenu(void);
-static void ShowSysfsTunner(void);
 
 static void clear(void);
+
+static void _init_map();
+static void show_map();
 
 
 int main()
 {
+	_init_map();
 	ShowMenu();
 	menu();
 
@@ -76,34 +82,6 @@ static void ShowAdvancedMenu()
 			"3: Get Extra Kernel Info\n"
 			"4: Sysfs Tunner\n"
 			"0: Back\n");
-}
-
-static void ShowSysfsTunner()
-{
-	fprintf(stdout,"\nOptions:\n");
-			if(Has(TEMP_THRESHOLD,NULL))
-				fprintf(stdout,"1 - CPU Temp Threshold\n");
-	fprintf(stdout, "2 - Vibration Amp\n"
-			"3 - Fast Charge\n"
-			"4 - TCP\n");
-		if(Has(SOUND_CONTROL_PATH))
-			fprintf(stdout,"5 - Sound Control Parameters\n");
-	fprintf(stdout, "6 - GPU Up threshold\n"
-			"7 - GPU Down threshold\n"
-			"8 - Max GPU Freq\n"
-			"9 - Hotplug\n"
-			"10 - Governor control\n"
-			"11 - CPU Freq Control\n"
-			"12 - Eco Mode\n"
-			"13 - INTELLIPLUG\n");
-		if(Has(INTELLITHERMAL,NULL))
-			fprintf(stdout,"14 - Intellithermal\n");
-		if(Has(DYN_FSYNC,NULL))
-			fprintf(stdout,"15 - Dynamic Fsync\n");
-		if(Has(FAUX_SOUND))
-			fprintf(stdout,"16 - Faux Sound\n");
-
-			fprintf(stdout,"0: Back\n");
 }
 
 static void menu()
@@ -275,11 +253,11 @@ static void SysfsTunner()
 {
 	do
 	{
-		ShowSysfsTunner();
+		show_map();
 		fprintf(stdout, "Value: ");
 		fscanf(stdin,"%hu",&ch);
 
-		if (ch>=0 && ch<=CH_LIMIT)
+		if (ch>=0 && ch<=CH_LIMIT && smap.count(ch))
 			tune(ch);
 		else
 			fprintf(stderr, "Unknown value\n");
@@ -289,4 +267,68 @@ static void SysfsTunner()
 
 	ShowAdvancedMenu();
 	return AdvancedMenu();
+}
+
+static void _init_map()
+{
+	if(Has(TEMP_THRESHOLD,NULL))
+		smap.insert(make_pair(1,"CPU Temp Threshold"));
+	
+	if(Has(VIBRATION_AMP,NULL))
+		smap.insert(make_pair(2,"Vibration Amp"));
+
+	if(Has(FORCE_FAST_CHARGE,NULL))
+		smap.insert(make_pair(3,"Fast Charge"));
+
+	if(Has(TCP_CONGESTION_ALGORITHM,NULL))
+		smap.insert(make_pair(4,"TCP"));
+
+	if(Has(SOUND_CONTROL_PATH))
+		smap.insert(make_pair(5,"Sound Control Parameters(Franco Sound)"));
+
+	if(Has(GPU_UP_THRESHOLD,NULL))
+		smap.insert(make_pair(6,"GPU Up threshold"));
+
+	if(Has(GPU_DOWN_THRESHOLD,NULL))
+		smap.insert(make_pair(7,"GPU Down threshold"));
+
+	if(Has(GPU_MAX_FREQ,NULL))
+		smap.insert(make_pair(8,"Max GPU Freq"));
+
+	if(Has(HOTPLUG_PATH))
+		smap.insert(make_pair(9,"Hotplug"));
+
+	if(Has(CURRENT_CPU_GOV,NULL))
+		smap.insert(make_pair(10,"Governor Control"));
+
+	if(Has(CURRENT_MAX_CPU_FREQ,NULL))
+		smap.insert(make_pair(11,"CPU Freq Control"));
+
+	if(Has(ECO_MODE,NULL))
+		smap.insert(make_pair(12,"Eco Mode"));
+
+	if(Has(INTELLIPLUG,NULL))
+		smap.insert(make_pair(13,"INTELLIPLUG"));
+
+	if(Has(INTELLITHERMAL,NULL))
+		smap.insert(make_pair(14,"Intellithermal"));
+
+	if(Has(DYN_FSYNC,NULL))
+		smap.insert(make_pair(15,"Dynamic Fsync"));
+	
+	if(Has(FAUX_SOUND))
+		smap.insert(make_pair(16,"Faux Sound"));
+
+}
+
+static void show_map()
+{
+	map <int,string>::iterator it;
+
+	cout<<'\n';
+
+	for(it = smap.begin(); it!=smap.end(); ++it)
+		cout<<(*it).first<<" - "<<(*it).second<<'\n';
+
+	cout<<"0 - Back"<<'\n';
 }
