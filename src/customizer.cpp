@@ -112,10 +112,10 @@ void tune(int p)
 
 	switch (p)
 	{
-		case 1:
-			if(!Has(TEMP_THRESHOLD))
-				return _error(-1); //TEMP FIX
+		case 0:
+			return;
 
+		case 1:
 			getExtraKernelInfo(p);
 			fprintf(stdout,"New Value:");
 			fscanf(stdin,"%d",&val);
@@ -256,11 +256,6 @@ void tune(int p)
 			break;
 
 		case 9:
-			if (!Has(HOTPLUG_PATH)) {
-				fprintf(stderr,"Hotplug is not supported\n");
-				return;
-			}
-
 			V_TUNNER.populate_vector(HOTPLUG_PATH);
 			V_TUNNER.print_vector();
 			fprintf(stdout,"Choose Interface number: ");
@@ -423,11 +418,6 @@ void tune(int p)
 			
 
 		case 16:
-			if (!Has(FAUX_SOUND)) {
-				fprintf(stderr,"Faux Sound is not supported\n");
-				return;
-			}
-
 			V_TUNNER.populate_vector(FAUX_SOUND);
 			V_TUNNER.print_vector();
 			fprintf(stdout,"Choose Interface number: ");

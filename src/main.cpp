@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <unistd.h>
 #include <map>
 
 #include <functions.hpp>
@@ -257,10 +258,13 @@ static void SysfsTunner()
 		fprintf(stdout, "Value: ");
 		fscanf(stdin,"%hu",&ch);
 
-		if (ch>=0 && ch<=CH_LIMIT && smap.count(ch))
+		if ((ch == 0 || smap.count(ch))  && ch<=CH_LIMIT)
 			tune(ch);
 		else
-			fprintf(stderr, "Unknown value\n");
+		{
+			fprintf(stderr, "Unknown value, aborting...\n");
+			usleep(350000);
+		}
 		
 	}
 	while (ch != 0);
@@ -330,5 +334,5 @@ static void show_map()
 	for(it = smap.begin(); it!=smap.end(); ++it)
 		cout<<(*it).first<<" - "<<(*it).second<<'\n';
 
-	cout<<"0 - Back"<<'\n';
+	cout<<"0 - Back\n";
 }
