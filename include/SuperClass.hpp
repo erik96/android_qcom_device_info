@@ -11,7 +11,7 @@ class SingleBoxPreference {
 	private:
 		int val;
 		char *status;
-		bool on,isChar;
+		bool on,isChar,isBool;
 		string path;
 		void init();
 

@@ -21,8 +21,8 @@ void SingleBoxPreference::init() {
     strcpy(status,"OFF");
 
     if(isBool) {
-            fin.open(path.c_str())
-            f>>on;
+            fin.open(path.c_str());
+            fin>>on;
             fin.close();
 
             if (on)
@@ -30,7 +30,7 @@ void SingleBoxPreference::init() {
             return;
     }
 
-	fin.open(path.c_str())
+	fin.open(path.c_str());
 	char c;
 
 	fin>>c;
@@ -59,7 +59,7 @@ int SingleBoxPreference::getValue() {
 	return val;
 }
 
-string stat() { init(); string ret(status); return ret; }
+string SingleBoxPreference::stat() { init(); string ret(status); return ret; }
 
 void SingleBoxPreference::write(int nVal) {
 
@@ -71,7 +71,7 @@ void SingleBoxPreference::write(int nVal) {
 
 void SingleBoxPreference::mSwitch() {
 
-    ofstream out(path.c_str())
+    ofstream out(path.c_str());
     if(isBool)
         out<<(!on);
 
