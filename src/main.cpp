@@ -10,7 +10,7 @@
 #include <helpers.hpp>
 #include <constants.hpp>
 
-#define version "0.9.84_beta"
+#define VERSION "0.9.84_beta"
 #define CH_LIMIT 16
 
 using namespace std;
@@ -54,7 +54,7 @@ static void ShowMenu()
 	if (IsNexus5())
 		fprintf(stdout,"You are running Nexus 5\n");
 
-	fprintf(stdout, "Qualcomm Device Info v%s by educk@XDA-Dev.com\n",version);
+	fprintf(stdout, "Qualcomm Device Info v%s by educk@XDA-Dev.com\n",VERSION);
 	fprintf(stdout, "Options:\n"
 			"1: Get ROM Information\n" 
 			"2: Get CPU Information\n"

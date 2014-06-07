@@ -7,6 +7,7 @@
 #include <functions.hpp>
 #include <classes.hpp>
 #include <helpers.hpp>
+#include <SuperClass.hpp>
 
 using namespace std;
 
@@ -116,20 +117,26 @@ void tune(int p)
 			return;
 
 		case 1:
-			getExtraKernelInfo(p);
+		{
+			SingleBoxPreference threshold(TEMP_THRESHOLD);
+
+			fprintf(stdout, "Temp Threshold: %d\n", threshold.getValue());
+
 			fprintf(stdout,"New Value:");
 			fscanf(stdin,"%d",&val);
 
 			if (val<30 || val>150)
 				return _error(val);
 			else
-				 TUNNER.create_w(TEMP_THRESHOLD,val);
-			getExtraKernelInfo(p);
+				 threshold.write(val);
+
+			fprintf(stdout, "Temp Threshold: %d\n", threshold.getValue());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
 			break;
+		}
 
 		case 2:
 			getExtraKernelInfo(p);
