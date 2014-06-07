@@ -183,12 +183,16 @@ void tune(int p)
 						TCP_CONGESTION_ALGORITHM);
 			unsigned int position;
 
-			fprintf(stdout,"Current TCP Congestion Algorithm: %s\n", 
+			fprintf(stdout,"\nCurrent TCP Congestion Algorithm: %s\n", 
 									tcp.status().c_str());
 			
 			fprintf(stdout, "Choose the new one:\n");
 			tcp.mOutput();
 			fscanf(stdin,"%u",&position);
+
+			if (!tcp.has(position))
+				return _error(position);
+
 			tcp.mChange(position);
 
 			fprintf(stdout,"Current TCP Congestion Algorithm: %s\n", 
@@ -198,30 +202,33 @@ void tune(int p)
 			getline(cin,s);
 			break;
 		}
-		case 5: //FIXME
-			V_TUNNER.populate_vector(SOUND_CONTROL_PATH);
-			V_TUNNER.print_vector();
-			fprintf(stdout,"Choose Interface number: ");
-			cin.ignore();
-			fscanf(stdin,"%d",&nr);
-			if(nr>V_TUNNER.vsize()-1)
-				return _error(nr);
+		case 5:
+		{
+			ListPreference francoSound(SOUND_CONTROL_PATH);
+			unsigned int position;
+			fprintf(stdout,"\n");
+			francoSound.mOutput();
 
-			fprintf(stdout,"New Value:");
+			fprintf(stdout,"\nInterface number: ");
+			fscanf(stdin,"%u",&position);
+
+			if (!francoSound.has(position))
+				return _error(position);
+
+			fprintf(stdout,"New Value: ");
 			fscanf(stdin,"%d",&val);
+
 
 			if (val<0 || val>20)
 				return _error(val);
 			else
-				 V_TUNNER.write_vector(nr,val);
-			V_TUNNER.populate_vector(SOUND_CONTROL_PATH);
-			V_TUNNER.print_vector();
+				francoSound.mChangeByValue(position,val);
 
-			fprintf(stdout,"\nPress enter to continue");
+			fprintf(stdout,"Values applied successfully\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
 			break;
-
+		}
 		case 6:
         	{
             		SingleBoxPreference gpuUp(GPU_UP_THRESHOLD);

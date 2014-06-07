@@ -103,7 +103,7 @@ ListPreference::ListPreference(string readPath) {
 	this->readPath = readPath;
 	isFile = false;
 
-	//fillDir(stringMap);
+	fillFromDir();
 }
 
 string ListPreference::status()
@@ -123,19 +123,68 @@ void ListPreference::fillFromFile() {
 	ifstream fin(readPath.c_str());
 
 	while(fin>>val)
-		fileMap.insert(make_pair(key++,val));
+	{
+		struct mapped m = {val, 0 };
+		fileMap.insert(make_pair(key++,m));
+	}
 
 	fin.close();
 }
 
-template <typename T>
-void ListPreference::list(T &m)
-{
-	typename T::iterator it;
+void ListPreference::fillFromDir() {
 
-	for (it = m.begin(); it!=m.end(); ++it)
-		cout<<(*it).first<<": "<<(*it).second<<'\n';
+
+	int key = 0;
+	DIR *dir;
+	dirent *pdir;
+	char buff[128];
+	int val;
+	string name;
+
+	dir = opendir(readPath.c_str());
+	if(!dir)
+	{
+		fprintf(stderr,"Invalid use of %s , aborting...\n", __func__);
+		return;
+	}
+		
+	
+	while((pdir = readdir(dir)))
+	{
+
+		if(!strcmp(pdir->d_name,"power") || !strcmp(pdir->d_name, "uevent") || 
+			!strcmp(pdir->d_name, "subsystem") || !strcmp(pdir->d_name, ".") ||
+			!strcmp(pdir->d_name, "..") || !strcmp(pdir->d_name, "dev"))
+				continue;
+
+		sprintf(buff,"%s/%s",readPath.c_str(),pdir->d_name);
+		val = SysfsVector::get_int(buff); //TEMP
+		name.assign(pdir->d_name);
+		mapped m = { name,val };
+		dirMap.insert(make_pair(key++,m));
+	}
+	closedir(dir);
+		
 }
+
+void ListPreference::mChange(unsigned position)
+{
+		ofstream out(writePath.c_str());
+		out<<fileMap[position].str;
+		out.close();
+}
+
+void ListPreference::mChangeByValue(unsigned position, int val)
+{
+	string full(readPath);
+	full+="/";
+	full+=dirMap[position].str;
+
+	ofstream fout(full.c_str());
+	if (fout)
+		fout<<val;
+	fout.close();
+} 
 
 void ListPreference::mOutput()
 {
@@ -146,9 +195,21 @@ void ListPreference::mOutput()
 		
 }
 
-void ListPreference::mChange(unsigned position)
+bool ListPreference::has(unsigned int position)
 {
-		ofstream out(writePath.c_str());
-		out<<fileMap[position];
-		out.close();
+	if(isFile)
+		return fileMap.count(position);
+	else
+		return dirMap.count(position);
+}
+
+template <typename T>
+void ListPreference::list(T &m)
+{
+	for (auto &it : m) {
+			if (isFile)
+				cout<<it.first<<": "<<it.second.str<<'\n';
+			else
+				cout<<it.first<<": "<<it.second.str<<": "<<it.second.value<<'\n';
+	}
 }
