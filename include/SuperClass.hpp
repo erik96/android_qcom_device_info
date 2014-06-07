@@ -2,6 +2,8 @@
 #include <string>
 #include <cstring>
 #include <fstream>
+#include <map>
+#include <iostream>
 
 using namespace std;
 
@@ -30,14 +32,22 @@ class SingleBoxPreference {
 class ListPreference {
 
 	private:
-		vector <int> sVec;
-		vector< pair<string,int> > pVec;
-		ifstream fin;
-		bool SingleFile;
+		map <int,string> fileMap;
+		map <string,int> dirMap;
+		string readPath, writePath;
+		bool isFile;
+
+		void fillFromFile();
+		void fillDir();
+
+		template <typename T>
+		void list(T &m);
 
 	public:
-		ListPreference(string path);
-		unsigned int getSize();
-		void printVector();
-		void writeVector();
+		ListPreference(string readPath, string writePath);
+		ListPreference(string readPath);
+
+		void mOutput();
+		void mChange(unsigned position);
+		string status();
 };

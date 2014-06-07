@@ -139,7 +139,7 @@ void tune(int p)
 		}
 
 		case 2:
-        {
+        	{
 		    SingleBoxPreference vibrator(VIBRATION_AMP);
 
 		    fprintf(stdout, "Vibration Amp: %d\n", vibrator.getValue());
@@ -157,9 +157,9 @@ void tune(int p)
 			cin.ignore();
 			getline(cin,s);
 			break;
-        }
+        	}
 		case 3:
-        {
+        	{
 			SingleBoxPreference fastCharge(FORCE_FAST_CHARGE,true);
 
 			fprintf(stdout,"Fast Charge is %s, switch ?(Y/N)\n", fastCharge.stat().c_str());
@@ -169,31 +169,35 @@ void tune(int p)
 			if(c == 'y' || c == 'Y')
 				 fastCharge.mSwitch();
 
-            fprintf(stdout,"Fast Charge is %s\n", fastCharge.stat().c_str());
+            		fprintf(stdout,"Fast Charge is %s\n", fastCharge.stat().c_str());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
 			break;
-        }
+        	}
 
 		case 4:
-			getExtraKernelInfo(p);
-			fprintf(stdout,"New TCP: ");
-			cin.ignore();
-			getline(cin,content);
+		{
+			ListPreference tcp(AVAILABLE_TCP_CONGESTION_ALGORITHM,
+						TCP_CONGESTION_ALGORITHM);
+			unsigned int position;
 
-			if(TUNNER.create_w(AVAILABLE_TCP_CONGESTION_ALGORITHM,
-						TCP_CONGESTION_ALGORITHM,content))
-				getExtraKernelInfo(p);
-			else
-				return _error(-1);
+			fprintf(stdout,"Current TCP Congestion Algorithm: %s\n", 
+									tcp.status().c_str());
+			
+			fprintf(stdout, "Choose the new one:\n");
+			tcp.mOutput();
+			fscanf(stdin,"%u",&position);
+			tcp.mChange(position);
 
+			fprintf(stdout,"Current TCP Congestion Algorithm: %s\n", 
+									tcp.status().c_str());
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
 			break;
-
+		}
 		case 5: //FIXME
 			V_TUNNER.populate_vector(SOUND_CONTROL_PATH);
 			V_TUNNER.print_vector();
@@ -219,10 +223,10 @@ void tune(int p)
 			break;
 
 		case 6:
-        {
-            SingleBoxPreference gpuUp(GPU_UP_THRESHOLD);
+        	{
+            		SingleBoxPreference gpuUp(GPU_UP_THRESHOLD);
 
-            fprintf(stdout, "GPU Up Threshold: %d\n", gpuUp.getValue());
+            		fprintf(stdout, "GPU Up Threshold: %d\n", gpuUp.getValue());
 
 			fprintf(stdout,"New Value:");
 			fscanf(stdin,"%d",&val);
@@ -237,12 +241,12 @@ void tune(int p)
 			cin.ignore();
 			getline(cin,s);
 			break;
-        }
+        	}
 		case 7:
-        {
-            SingleBoxPreference gpuDown(GPU_UP_THRESHOLD);
+        	{
+            		SingleBoxPreference gpuDown(GPU_DOWN_THRESHOLD);
 
-            fprintf(stdout, "GPU Down Threshold: %d\n", gpuDown.getValue());
+            		fprintf(stdout, "GPU Down Threshold: %d\n", gpuDown.getValue());
 
 			fprintf(stdout,"New Value:");
 			fscanf(stdin,"%d",&val);
@@ -257,7 +261,7 @@ void tune(int p)
 			cin.ignore();
 			getline(cin,s);
 			break;
-        }
+        	}
 
 		case 8:
 			getGPUInfo(p);
