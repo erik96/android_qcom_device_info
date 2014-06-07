@@ -17,14 +17,14 @@ class SingleBoxPreference {
 
 	public:
 		SingleBoxPreference(string path);
-		bool stat();
-		void sSwitch();
+		SingleBoxPreference(string path, bool isBool);
+		void mSwitch();
 		void write(int nVal);
 		int getValue();
 		string stat();
 
 		~SingleBoxPreference();
-		
+
 };
 
 class ListPreference {

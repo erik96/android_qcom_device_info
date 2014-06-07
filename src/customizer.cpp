@@ -17,7 +17,7 @@ static void _error(int val)
 }
 
 class FileR {
-	
+
 	private:
 		char c,*status;
 		int val;
@@ -48,7 +48,7 @@ class FileR {
 			}
 			in.close();
 	}
-			
+
 	public:
 		FileR(string path,bool isChar) {
 			this->path = path;
@@ -139,36 +139,43 @@ void tune(int p)
 		}
 
 		case 2:
-			getExtraKernelInfo(p);
+        {
+		    SingleBoxPreference vibrator(VIBRATION_AMP);
+
+		    fprintf(stdout, "Vibration Amp: %d\n", vibrator.getValue());
+
 			fprintf(stdout,"New Value:");
 			fscanf(stdin,"%d",&val);
 
 			if (val<0 || val>100)
 				return _error(val);
 			else
-				 TUNNER.create_w(VIBRATION_AMP,val);
-			getExtraKernelInfo(p);
-			
+				 vibrator.write(val);
+			fprintf(stdout, "Vibration Amp: %d\n", vibrator.getValue());
+
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
 			break;
-
+        }
 		case 3:
-			getExtraKernelInfo(p);
-			fprintf(stdout,"New Value(ON:1 OFF:0):");
-			fscanf(stdin,"%d",&val);
+        {
+			SingleBoxPreference fastCharge(FORCE_FAST_CHARGE,true);
 
-			if (val != 1 && val != 0)
-				return _error(val);
-			else
-				 TUNNER.create_w(FORCE_FAST_CHARGE,val);
-			getExtraKernelInfo(p);
+			fprintf(stdout,"Fast Charge is %s, switch ?(Y/N)\n", fastCharge.stat().c_str());
+
+			fscanf(stdin,&c);
+
+			if(c == 'y' || c == 'Y')
+				 fastCharge.mSwitch();
+
+            fprintf(stdout,"Fast Charge is %s\n", fastCharge.stat().c_str());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
 			break;
+        }
 
 		case 4:
 			getExtraKernelInfo(p);
@@ -210,37 +217,47 @@ void tune(int p)
 			cin.ignore();
 			getline(cin,s);
 			break;
-			
+
 		case 6:
-			getExtraKernelInfo(p);
+        {
+            SingleBoxPreference gpuUp(GPU_UP_THRESHOLD);
+
+            fprintf(stdout, "GPU Up Threshold: %d\n", gpuUp.getValue());
+
 			fprintf(stdout,"New Value:");
 			fscanf(stdin,"%d",&val);
 
 			if (val<0 || val>100)
 				return _error(val);
 			else
-				 TUNNER.create_w(GPU_UP_THRESHOLD,val);
-			getExtraKernelInfo(p);
+				 gpuUp.write(val);
+			fprintf(stdout, "GPU Up Threshold: %d\n", gpuUp.getValue());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
 			break;
+        }
 		case 7:
-			getExtraKernelInfo(p);
+        {
+            SingleBoxPreference gpuDown(GPU_UP_THRESHOLD);
+
+            fprintf(stdout, "GPU Down Threshold: %d\n", gpuDown.getValue());
+
 			fprintf(stdout,"New Value:");
 			fscanf(stdin,"%d",&val);
 
 			if (val<0 || val>100)
 				return _error(val);
 			else
-				 TUNNER.create_w(GPU_DOWN_THRESHOLD,val);
-			getExtraKernelInfo(p);
+				 gpuDown.write(val);
+			fprintf(stdout, "GPU Down Threshold: %d\n", gpuDown.getValue());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
 			break;
+        }
 
 		case 8:
 			getGPUInfo(p);
@@ -248,10 +265,10 @@ void tune(int p)
 			V_TUNNER.populate_vector(GPU_AVAILABLE_FREQ,NULL);
 			fprintf(stdout,"Choose new MAX GPU Freq value:\n");
 			V_TUNNER.print_vector(NULL);
-			
+
 			cin.ignore();
 			fscanf(stdin,"%d",&val);
-				
+
 			if(V_TUNNER.write_vector(GPU_MAX_FREQ,val))
 				getGPUInfo(p);
 			else
@@ -278,7 +295,7 @@ void tune(int p)
 			V_TUNNER.write_vector(nr,val);
 			V_TUNNER.populate_vector(HOTPLUG_PATH);
 			V_TUNNER.print_vector();
-			
+
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
@@ -316,7 +333,7 @@ void tune(int p)
 				V_TUNNER.print_vector(NULL);
 				cin.ignore();
 				fscanf(stdin,"%d",&val);
-				
+
 				if(V_TUNNER.write_vector(CURRENT_MIN_CPU_FREQ,val))
 					getCPUInfo(p);
 				else
@@ -328,7 +345,7 @@ void tune(int p)
 				V_TUNNER.print_vector(NULL);
 				cin.ignore();
 				fscanf(stdin,"%d",&val);
-				
+
 				if(V_TUNNER.write_vector(CURRENT_MAX_CPU_FREQ,val))
 					getCPUInfo(p);
 
@@ -406,23 +423,23 @@ void tune(int p)
 
 		case 15:
 		{
-			FileR DF(DYN_FSYNC,false);
-			fprintf(stdout,"Dynamic Fsync is %s, switch?(y/n): ",DF.stat().c_str());
+			SingleBoxPreference dynamicFsync(DYN_FSYNC);
+			fprintf(stdout,"Dynamic Fsync is %s, switch?(y/n): ",dynamicFsync.stat().c_str());
 
 			cin.ignore();
 			fscanf(stdin," %c",&c);
 
 			if(c == 'y' || c == 'Y')
-				DF.sswitch();
+				dynamicFsync.mSwitch();
 
-			fprintf(stdout,"Dynamic Fsync is %s\n", DF.stat().c_str());
+			fprintf(stdout,"Dynamic Fsync is %s\n", dynamicFsync.stat().c_str());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
 			break;
 		}
-			
+
 
 		case 16:
 			V_TUNNER.populate_vector(FAUX_SOUND);
@@ -440,13 +457,13 @@ void tune(int p)
 			V_TUNNER.write_vector(nr,val);
 			V_TUNNER.populate_vector(FAUX_SOUND);
 			V_TUNNER.print_vector();
-			
+
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
-			break;	
-	  
-		
+			break;
+
+
 		default:
 			break;
 	}

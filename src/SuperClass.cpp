@@ -4,20 +4,39 @@ SingleBoxPreference::SingleBoxPreference(string path) {
 
 	this->path = path;
 	init();
-		
+
+}
+
+SingleBoxPreference::SingleBoxPreference(string path, bool isBool)
+{
+    this->path = path;
+    this->isBool = true;
+    init();
 }
 
 void SingleBoxPreference::init() {
 
-	ifstream fin(path.c_str());
+    ifstream fin;
+    status = new char[8];
+    strcpy(status,"OFF");
+
+    if(isBool) {
+            fin.open(path.c_str())
+            f>>on;
+            fin.close();
+
+            if (on)
+                strcpy(status,"ON");
+            return;
+    }
+
+	fin.open(path.c_str())
 	char c;
-	status = new char[8];
 
 	fin>>c;
 
 	if (isalpha(c)) {
 		isChar = true;
-		strcpy(status,"OFF");
 		on = false;
 
 			if(c == 'Y' || c == 'y') {
@@ -33,7 +52,6 @@ void SingleBoxPreference::init() {
 		fin.close();
 	}
 }
-	
 
 int SingleBoxPreference::getValue() {
 
@@ -50,6 +68,16 @@ void SingleBoxPreference::write(int nVal) {
 	out.close();
 	init();
 }
+
+void SingleBoxPreference::mSwitch() {
+
+    ofstream out(path.c_str())
+    if(isBool)
+        out<<(!on);
+
+    out.close();
+}
+
 
 SingleBoxPreference::~SingleBoxPreference()
 {
