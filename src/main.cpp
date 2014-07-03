@@ -320,8 +320,8 @@ static void _init_map()
 	if(Has(DYN_FSYNC,NULL))
 		smap.insert(make_pair(15,"Dynamic Fsync"));
 	
-	if(Has(FAUX_SOUND))
-		smap.insert(make_pair(16,"Faux Sound"));
+	//if(Has(FAUX_SOUND))
+		//smap.insert(make_pair(16,"Faux Sound"));
 
 }
 

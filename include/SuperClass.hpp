@@ -1,13 +1,9 @@
-#include <vector>
 #include <string>
 #include <cstring>
 #include <fstream>
 #include <map>
 #include <iostream>
 #include <dirent.h>
-#include <set>
-
-#include <classes.hpp> //TEMP FIX
 
 using namespace std;
 
@@ -27,8 +23,7 @@ class SingleBoxPreference {
 		void init();
 
 	public:
-		SingleBoxPreference(string path);
-		SingleBoxPreference(string path, bool isBool);
+		SingleBoxPreference(string path, bool isBool=false);
 		void mSwitch();
 		void write(int nVal);
 		int getValue();
@@ -41,8 +36,7 @@ class SingleBoxPreference {
 class ListPreference {
 
 	private:
-		map <int, mapped> fileMap;
-		map <int, mapped> dirMap;
+		map <int, mapped> Map;
 		string readPath, writePath;
 		bool isFile;
 
@@ -61,4 +55,6 @@ class ListPreference {
 
 		template <typename T>
 		void list(T &m);
+
+		static int get_int(const char *path);
 };

@@ -1,16 +1,9 @@
 #include <SuperClass.hpp>
 
-SingleBoxPreference::SingleBoxPreference(string path) {
-
-	this->path = path;
-	init();
-
-}
-
 SingleBoxPreference::SingleBoxPreference(string path, bool isBool) {
 
     	this->path = path;
-    	this->isBool = true;
+    	this->isBool = isBool;
     	init();
 }
 
@@ -72,10 +65,22 @@ void SingleBoxPreference::write(int nVal) {
 void SingleBoxPreference::mSwitch() {
 
 	ofstream out(path.c_str());
-	if(isBool)
-		out<<(!on);
 
-	out.close();
+	if (isBool) {
+		out<<(!on);
+		out.close();
+	}
+	if(isChar && on) {
+		out<<"N";
+		out.close();
+		return;
+	}
+
+	if (isChar && !on) {
+		out<<"Y";
+		out.close();
+		return;
+	}
 }
 
 
@@ -108,6 +113,9 @@ ListPreference::ListPreference(string readPath) {
 
 string ListPreference::status()
 {
+	if (!isFile)
+		fillFromDir(); //idea
+
 	string ret;
 	ifstream fin(writePath.c_str());
 	
@@ -125,7 +133,7 @@ void ListPreference::fillFromFile() {
 	while(fin>>val)
 	{
 		struct mapped m = {val, 0 };
-		fileMap.insert(make_pair(key++,m));
+		Map.insert(make_pair(key++,m));
 	}
 
 	fin.close();
@@ -133,6 +141,7 @@ void ListPreference::fillFromFile() {
 
 void ListPreference::fillFromDir() {
 
+	Map.clear(); //idea
 
 	int key = 0;
 	DIR *dir;
@@ -158,10 +167,10 @@ void ListPreference::fillFromDir() {
 				continue;
 
 		sprintf(buff,"%s/%s",readPath.c_str(),pdir->d_name);
-		val = SysfsVector::get_int(buff); //TEMP
+		val = get_int(buff);
 		name.assign(pdir->d_name);
 		mapped m = { name,val };
-		dirMap.insert(make_pair(key++,m));
+		Map.insert(make_pair(key++,m));
 	}
 	closedir(dir);
 		
@@ -170,7 +179,7 @@ void ListPreference::fillFromDir() {
 void ListPreference::mChange(unsigned position)
 {
 		ofstream out(writePath.c_str());
-		out<<fileMap[position].str;
+		out<<Map[position].str;
 		out.close();
 }
 
@@ -178,38 +187,44 @@ void ListPreference::mChangeByValue(unsigned position, int val)
 {
 	string full(readPath);
 	full+="/";
-	full+=dirMap[position].str;
+	full+=Map[position].str;
 
 	ofstream fout(full.c_str());
 	if (fout)
+	{
+		cout<<"HERE:"<<full.c_str()<<endl;
 		fout<<val;
+	}
 	fout.close();
 } 
 
 void ListPreference::mOutput()
 {
-	if(isFile)
-		list(fileMap);
-	else
-		list(dirMap);
-		
+	return list(Map);		
 }
 
 bool ListPreference::has(unsigned int position)
 {
-	if(isFile)
-		return fileMap.count(position);
-	else
-		return dirMap.count(position);
+	return Map.count(position);
 }
 
 template <typename T>
 void ListPreference::list(T &m)
 {
 	for (auto &it : m) {
-			if (isFile)
-				cout<<it.first<<": "<<it.second.str<<'\n';
-			else
-				cout<<it.first<<": "<<it.second.str<<": "<<it.second.value<<'\n';
+		if (isFile)
+			cout<<it.first<<": "<<it.second.str<<'\n';
+		else
+			cout<<it.first<<": "<<it.second.str<<": "<<it.second.value<<'\n';
 	}
+}
+
+int ListPreference::get_int(const char *path)
+{
+	int ret = 0;
+	ifstream fp(path);
+	fp>>ret;
+	fp.close();
+
+	return ret;
 }

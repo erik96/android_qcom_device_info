@@ -16,73 +16,6 @@ static void _error(int val)
 	fprintf(stderr,"Invalid value(%d), aborting...\n",val);
 }
 
-class FileR {
-
-	private:
-		char c,*status;
-		int val;
-		string path;
-		bool isChar,on;
-
-	void init()
-	{
-		ifstream in(path.c_str());
-			status = new char[8];
-			strcpy(status,"OFF");
-			on = false;
-
-			if(isChar) {
-				in>>c;
-				if(c == 'Y' || c == 'y') {
-					strcpy(status,"ON");
-					on = true;
-				}
-
-			} else {
-
-				in>>val;
-				if(val) {
-					strcpy(status,"ON");
-					on = true;
-				}
-			}
-			in.close();
-	}
-
-	public:
-		FileR(string path,bool isChar) {
-			this->path = path;
-			this->isChar = isChar;
-			init();
-		}
-
-	void sswitch()
-	{
-		ofstream out(path.c_str());
-		if(isChar && on) {
-			out<<"N";
-			out.close();
-			return;
-		}
-
-		if (isChar && !on) {
-			out<<"Y";
-			out.close();
-			return;
-		}
-
-		if(!isChar) {
-			out<<(!on);
-			out.close();
-			return;
-		}
-	}
-
-	string stat() { init(); string ret(status); return ret; }
-
-	~FileR() { delete [] status; }
-};
-
 void tune(int p)
 {
 /*
@@ -106,8 +39,6 @@ void tune(int p)
 
 	int val;
 	unsigned int nr;
-	SysfsIO TUNNER;
-	SysfsVector V_TUNNER;
 	string content;
 	char c;
 
@@ -140,9 +71,9 @@ void tune(int p)
 
 		case 2:
         	{
-		    SingleBoxPreference vibrator(VIBRATION_AMP);
+		    	SingleBoxPreference vibrator(VIBRATION_AMP);
 
-		    fprintf(stdout, "Vibration Amp: %d\n", vibrator.getValue());
+		    	fprintf(stdout, "Vibration Amp: %d\n", vibrator.getValue());
 
 			fprintf(stdout,"New Value:");
 			fscanf(stdin,"%d",&val);
@@ -163,8 +94,8 @@ void tune(int p)
 			SingleBoxPreference fastCharge(FORCE_FAST_CHARGE,true);
 
 			fprintf(stdout,"Fast Charge is %s, switch ?(Y/N)\n", fastCharge.stat().c_str());
-
-			fscanf(stdin,&c);
+			cin.ignore();
+			cin>>c;
 
 			if(c == 'y' || c == 'Y')
 				 fastCharge.mSwitch();
@@ -271,120 +202,151 @@ void tune(int p)
         	}
 
 		case 8:
-			getGPUInfo(p);
-			getGPUInfo(-1);
-			V_TUNNER.populate_vector(GPU_AVAILABLE_FREQ,NULL);
+		{
+			unsigned int position;
+			ListPreference gpuOC(GPU_AVAILABLE_FREQ,GPU_MAX_FREQ);
+			fprintf(stdout,"Current Max GPU Freq: %s\n",gpuOC.status().c_str());
+
 			fprintf(stdout,"Choose new MAX GPU Freq value:\n");
-			V_TUNNER.print_vector(NULL);
-
+			gpuOC.mOutput();
+			
 			cin.ignore();
-			fscanf(stdin,"%d",&val);
+			fscanf(stdin,"%u",&position);
 
-			if(V_TUNNER.write_vector(GPU_MAX_FREQ,val))
-				getGPUInfo(p);
+			if(gpuOC.has(position))
+				gpuOC.mChange(position);
 			else
-				return _error(val);
+				return _error(position);
+
+			fprintf(stdout,"Current Max GPU Freq: %s\n",gpuOC.status().c_str());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
 			break;
+		}
 
 		case 9:
-			V_TUNNER.populate_vector(HOTPLUG_PATH);
-			V_TUNNER.print_vector();
-			fprintf(stdout,"Choose Interface number: ");
-			cin.ignore();
-			fscanf(stdin,"%d",&nr);
+		{
+			unsigned int position;
+			ListPreference hotplug(HOTPLUG_PATH);
 
-			if(nr>V_TUNNER.vsize()-1)
-				return _error(nr);
+			hotplug.mOutput();
+			
+			fprintf(stdout,"\nChoose Interface number: ");
+			cin.ignore();
+			fscanf(stdin,"%d",&position);
+
+			if(!hotplug.has(position))
+				return _error(position);
 
 			fprintf(stdout,"New Value:");
 			fscanf(stdin,"%d",&val);
+			
+			hotplug.mChangeByValue(position,val);
 
-			V_TUNNER.write_vector(nr,val);
-			V_TUNNER.populate_vector(HOTPLUG_PATH);
-			V_TUNNER.print_vector();
-
-			fprintf(stdout,"\nPress enter to continue");
+			fprintf(stdout,"Values applied successfully\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
 			break;
+		}
 
 		case 10:
-			getCPUInfo(p);
-			V_TUNNER.populate_vector(SCALING_AVAILABLE_GOVS,NULL);
-			V_TUNNER.print_vector(NULL);
+		{
+			unsigned int position;
+			ListPreference cpuGov(SCALING_AVAILABLE_GOVS,CURRENT_CPU_GOV);
+			fprintf(stdout,"Current CPU Governor: %s\n",cpuGov.status().c_str());
+
+			cpuGov.mOutput();
 
 			fprintf(stdout,"Choose new governor number: ");
 			cin.ignore();
-			fscanf(stdin,"%d",&nr);
+			fscanf(stdin,"%d",&position);
 
-			if(V_TUNNER.write_vector(CURRENT_CPU_GOV,nr))
-					getCPUInfo(p);
+			if(cpuGov.has(position))
+					cpuGov.mChange(position);
 			else
-				return _error(nr);
+				return _error(position);
+
+			fprintf(stdout,"Current CPU Governor: %s\n",cpuGov.status().c_str());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
 			break;
+		}
 
 		case 11:
-			getCPUInfo(p);
-			V_TUNNER.populate_vector(SCALING_AVAILABLE_FREQ,NULL);
+		{
+			unsigned int position;
+
 			fprintf(stdout,"1 - Min\n2 - Max\nValue: ");
 			cin.ignore();
 			fscanf(stdin,"%d",&nr);
 
 			if (nr == 1)
 			{
-				fprintf(stdout,"Choose new MIN value:\n");
-				V_TUNNER.print_vector(NULL);
-				cin.ignore();
-				fscanf(stdin,"%d",&val);
+				ListPreference changeMin(SCALING_AVAILABLE_FREQ,
+								CURRENT_MIN_CPU_FREQ);
 
-				if(V_TUNNER.write_vector(CURRENT_MIN_CPU_FREQ,val))
-					getCPUInfo(p);
+				fprintf(stdout,"CPU MIN Freq:%s\n",changeMin.status().c_str());
+
+				fprintf(stdout,"Choose new MIN value:\n");
+				changeMin.mOutput();
+
+				cin.ignore();
+				fscanf(stdin,"%d",&position);
+
+				if(changeMin.has(position))
+					changeMin.mChange(position);
 				else
-					return _error(val);
+					return _error(position);
+
+				fprintf(stdout,"CPU MIN Freq:%s\n",changeMin.status().c_str());
 			}
 			else if (nr == 2)
 			{
+				ListPreference changeMax(SCALING_AVAILABLE_FREQ,
+								CURRENT_MAX_CPU_FREQ);
+
+				fprintf(stdout,"CPU MAX Freq:%s\n",changeMax.status().c_str());
+
 				fprintf(stdout,"Choose new MAX value:\n");
-				V_TUNNER.print_vector(NULL);
+				changeMax.mOutput();
+
 				cin.ignore();
-				fscanf(stdin,"%d",&val);
+				fscanf(stdin,"%d",&position);
 
-				if(V_TUNNER.write_vector(CURRENT_MAX_CPU_FREQ,val))
-					getCPUInfo(p);
-
+				if(changeMax.has(position))
+					changeMax.mChange(position);
 				else
-					return _error(val);
+					return _error(position);
+
+				fprintf(stdout,"CPU MAX Freq:%s\n",changeMax.status().c_str());
 			}
 			else
 				return _error(nr);
 
-			fprintf(stdout,"\nPress enter to continue");
+			fprintf(stdout,"\nValues applied successfully\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
 			break;
+		}
 
 		case 12:
 		{
-			FileR EM(ECO_MODE,false);
+			SingleBoxPreference ecoMode(ECO_MODE,true);
 			fprintf(stdout,"Eco Mode is %s, switch?(y/n): ",
-						EM.stat().c_str());
+						ecoMode.stat().c_str());
 
 			cin.ignore();
 			fscanf(stdin," %c",&c);
 
 			if(c == 'y' || c == 'Y')
-				EM.sswitch();
+				ecoMode.mSwitch();
 
 			fprintf(stdout,"Eco Mode is %s\n",
-						EM.stat().c_str());
+						ecoMode.stat().c_str());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
@@ -394,18 +356,18 @@ void tune(int p)
 
 		case 13:
 		{
-			FileR IP(INTELLIPLUG,false);
+			SingleBoxPreference intelliPlug(INTELLIPLUG,true);
 			fprintf(stdout,"Intelliplug is %s, switch?(y/n): ",
-						IP.stat().c_str());
+						intelliPlug.stat().c_str());
 
 			cin.ignore();
 			fscanf(stdin," %c",&c);
 
 			if(c == 'y' || c == 'Y')
-				IP.sswitch();
+				intelliPlug.mSwitch();
 
 			fprintf(stdout,"Intelliplug is %s\n",
-						IP.stat().c_str());
+						intelliPlug.stat().c_str());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
@@ -415,16 +377,17 @@ void tune(int p)
 
 		case 14:
 		{
-			FileR IT(INTELLITHERMAL,true);
-			fprintf(stdout,"Intellithermal is %s, switch?(y/n): ",IT.stat().c_str());
+			SingleBoxPreference intelliThermal(INTELLITHERMAL);
+			fprintf(stdout,"Intellithermal is %s, switch?(y/n): ",
+						intelliThermal.stat().c_str());
 
 			cin.ignore();
 			fscanf(stdin," %c",&c);
 
 			if(c == 'y' || c == 'Y')
-				IT.sswitch();
+				intelliThermal.mSwitch();
 
-			fprintf(stdout,"Intellithermal is %s\n", IT.stat().c_str());
+			fprintf(stdout,"Intellithermal is %s\n", intelliThermal.stat().c_str());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
@@ -452,27 +415,30 @@ void tune(int p)
 		}
 
 
-		case 16:
-			V_TUNNER.populate_vector(FAUX_SOUND);
-			V_TUNNER.print_vector();
-			fprintf(stdout,"Choose Interface number: ");
-			cin.ignore();
-			fscanf(stdin,"%d",&nr);
+		/*case 16:
+		{
+			ListPreference fauxSound(FAUX_SOUND);
+			unsigned int position;
 
-			if(nr>V_TUNNER.vsize()-1)
-				return _error(nr);
+			fprintf(stdout,"\n");
+			fauxSound.mOutput();
 
-			fprintf(stdout,"New Value:");
+			fprintf(stdout,"\nInterface number: ");
+			fscanf(stdin,"%u",&position);
+
+			if (!fauxSound.has(position))
+				return _error(position);
+
+			fprintf(stdout,"New Value: ");
 			fscanf(stdin,"%d",&val);
+	
+			fauxSound.mChangeByValue(position,val);
 
-			V_TUNNER.write_vector(nr,val);
-			V_TUNNER.populate_vector(FAUX_SOUND);
-			V_TUNNER.print_vector();
-
-			fprintf(stdout,"\nPress enter to continue");
+			fprintf(stdout,"Values applied successfully\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
 			break;
+		} */
 
 
 		default:
