@@ -4,18 +4,17 @@
 #include <fstream>
 #include <string>
 #include <unistd.h>
-#include <map>
 
 #include <functions.hpp>
 #include <helpers.hpp>
 #include <constants.hpp>
+#include <Wrapper.hpp>
 
-#define VERSION "0.9.84_beta"
-#define CH_LIMIT 16
+#define VERSION "0.9.90_beta"
 
 using namespace std;
 
-map <int,string> smap; 
+map <int, pair<string, shared_ptr<Wrapper> > > heap;
 
 unsigned short ch;
 string s;
@@ -38,6 +37,7 @@ int main()
 	ShowMenu();
 	menu();
 
+	heap.clear();
 	clear();
 	return 0;
 }
@@ -54,7 +54,7 @@ static void ShowMenu()
 	if (IsNexus5())
 		fprintf(stdout,"You are running Nexus 5\n");
 
-	fprintf(stdout, "Qualcomm Device Info v%s by educk@XDA-Dev.com\n",VERSION);
+	fprintf(stdout, "Qualcomm Device Info v%s by educk@xda-developers.com\n",VERSION);
 	fprintf(stdout, "Options:\n"
 			"1: Get ROM Information\n" 
 			"2: Get CPU Information\n"
@@ -94,6 +94,7 @@ static void menu()
 		switch (ch)
 		{
 			case 0:
+				heap.clear();
 				fprintf(stdout, "Bye-Bye !\n");
 				break;
 			case 1:
@@ -258,7 +259,7 @@ static void SysfsTunner()
 		fprintf(stdout, "Value: ");
 		fscanf(stdin,"%hu",&ch);
 
-		if ((ch == 0 || smap.count(ch))  && ch<=CH_LIMIT)
+		if (ch == 0 || heap.count(ch))
 			tune(ch);
 		else
 		{
@@ -273,66 +274,85 @@ static void SysfsTunner()
 	return AdvancedMenu();
 }
 
+static inline void singleWrap(int n, string content, string path, bool isBool=false)
+{
+	SingleBoxPreference *sbp = new SingleBoxPreference(path,isBool);
+
+	shared_ptr<Wrapper> ptr(new Wrapper(*sbp));
+	delete sbp;
+
+	heap.insert(make_pair(n,make_pair(content,ptr)));
+}
+
+static inline void listWrap(int n,string content, string readPath, string writePath, bool hasWritePath=false)
+{
+	ListPreference *lp;
+
+	if(hasWritePath)
+		lp = new ListPreference(readPath,writePath);
+	else
+		lp = new ListPreference(readPath);
+
+	shared_ptr<Wrapper> ptr(new Wrapper(*lp));
+	delete lp;
+
+	heap.insert(make_pair(n,make_pair(content,ptr)));
+}
+
 static void _init_map()
 {
+
 	if(Has(TEMP_THRESHOLD,NULL))
-		smap.insert(make_pair(1,"CPU Temp Threshold"));
+		singleWrap(1,"CPU Temp Threshold",TEMP_THRESHOLD);
 	
 	if(Has(VIBRATION_AMP,NULL))
-		smap.insert(make_pair(2,"Vibration Amp"));
+		singleWrap(2,"Vibration Amp",VIBRATION_AMP);
 
 	if(Has(FORCE_FAST_CHARGE,NULL))
-		smap.insert(make_pair(3,"Fast Charge"));
+		singleWrap(3,"Fast Charge",FORCE_FAST_CHARGE,true);
 
 	if(Has(TCP_CONGESTION_ALGORITHM,NULL))
-		smap.insert(make_pair(4,"TCP"));
+		listWrap(4,"TCP",AVAILABLE_TCP_CONGESTION_ALGORITHM,TCP_CONGESTION_ALGORITHM,true);
 
 	if(Has(SOUND_CONTROL_PATH))
-		smap.insert(make_pair(5,"Sound Control Parameters(Franco Sound)"));
+		listWrap(5,"Sound Control Parameters(Franco Sound)",SOUND_CONTROL_PATH," ");
 
 	if(Has(GPU_UP_THRESHOLD,NULL))
-		smap.insert(make_pair(6,"GPU Up threshold"));
+		singleWrap(6,"GPU Up threshold",GPU_UP_THRESHOLD);
 
 	if(Has(GPU_DOWN_THRESHOLD,NULL))
-		smap.insert(make_pair(7,"GPU Down threshold"));
+		singleWrap(7,"GPU Down threshold",GPU_DOWN_THRESHOLD);
 
 	if(Has(GPU_MAX_FREQ,NULL))
-		smap.insert(make_pair(8,"Max GPU Freq"));
+		listWrap(8,"Max GPU Freq",GPU_AVAILABLE_FREQ,GPU_MAX_FREQ,true);
 
 	if(Has(HOTPLUG_PATH))
-		smap.insert(make_pair(9,"Hotplug"));
+		listWrap(9,"Hotplug",HOTPLUG_PATH," ");
 
 	if(Has(CURRENT_CPU_GOV,NULL))
-		smap.insert(make_pair(10,"Governor Control"));
+		listWrap(10,"Governor Control",SCALING_AVAILABLE_GOVS,CURRENT_CPU_GOV,true);
 
-	if(Has(CURRENT_MAX_CPU_FREQ,NULL))
-		smap.insert(make_pair(11,"CPU Freq Control"));
-
-	if(Has(ECO_MODE,NULL))
-		smap.insert(make_pair(12,"Eco Mode"));
+	//if(Has(CURRENT_MAX_CPU_FREQ,NULL))
+		//smap.insert(make_pair(11,"CPU Freq Control"));
 
 	if(Has(INTELLIPLUG,NULL))
-		smap.insert(make_pair(13,"INTELLIPLUG"));
+		singleWrap(12,"INTELLIPLUG",INTELLIPLUG,true);
 
 	if(Has(INTELLITHERMAL,NULL))
-		smap.insert(make_pair(14,"Intellithermal"));
+		singleWrap(13,"Intellithermal",INTELLITHERMAL);
 
 	if(Has(DYN_FSYNC,NULL))
-		smap.insert(make_pair(15,"Dynamic Fsync"));
-	
-	//if(Has(FAUX_SOUND))
-		//smap.insert(make_pair(16,"Faux Sound"));
-
+		singleWrap(14,"Dynamic Fsync",DYN_FSYNC);
 }
 
 static void show_map()
 {
-	map <int,string>::iterator it;
+	map <int, pair<string, shared_ptr<Wrapper> > >::iterator it;
 
 	cout<<'\n';
 
-	for(it = smap.begin(); it!=smap.end(); ++it)
-		cout<<(*it).first<<" - "<<(*it).second<<'\n';
+	for(it = heap.begin(); it!=heap.end(); ++it)
+		cout<<(*it).first<<" - "<<(*it).second.first<<'\n';
 
 	cout<<"0 - Back\n";
 }

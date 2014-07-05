@@ -7,6 +7,8 @@ SingleBoxPreference::SingleBoxPreference(string path, bool isBool) {
     	init();
 }
 
+SingleBoxPreference::SingleBoxPreference(SingleBoxPreference &obj) : path(obj.path), isBool(obj.isBool) { init(); };
+
 void SingleBoxPreference::init() {
 
 	ifstream fin;
@@ -92,7 +94,6 @@ SingleBoxPreference::~SingleBoxPreference() {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-
 ListPreference::ListPreference(string readPath, string writePath) {
 
 	this->readPath = readPath;
@@ -110,6 +111,17 @@ ListPreference::ListPreference(string readPath) {
 
 	fillFromDir();
 }
+
+ListPreference::ListPreference(ListPreference &obj) : readPath(obj.readPath) { 
+
+	if (obj.isFile) {
+		this->writePath = obj.writePath; 
+		this->isFile = true;
+		fillFromFile();
+	}
+	else
+		fillFromDir();
+};
 
 string ListPreference::status()
 {
@@ -130,9 +142,14 @@ void ListPreference::fillFromFile() {
 	string val;
 	ifstream fin(readPath.c_str());
 
+	if(!fin) {
+		cout<<"INVALID USE OF: "<<__func__<<'\n';
+		return;
+	}
+
 	while(fin>>val)
 	{
-		struct mapped m = {val, 0 };
+		mapped m = {val, 0 };
 		Map.insert(make_pair(key++,m));
 	}
 
@@ -179,7 +196,7 @@ void ListPreference::fillFromDir() {
 void ListPreference::mChange(unsigned position)
 {
 		ofstream out(writePath.c_str());
-		out<<Map[position].str;
+		out<<Map[position].tr;
 		out.close();
 }
 
@@ -187,19 +204,22 @@ void ListPreference::mChangeByValue(unsigned position, int val)
 {
 	string full(readPath);
 	full+="/";
-	full+=Map[position].str;
+	full+=Map[position].tr;
 
 	ofstream fout(full.c_str());
 	if (fout)
-	{
-		cout<<"HERE:"<<full.c_str()<<endl;
 		fout<<val;
-	}
+
 	fout.close();
 } 
 
 void ListPreference::mOutput()
 {
+	if(isFile)
+		fillFromFile();
+	else
+		fillFromDir();
+
 	return list(Map);		
 }
 
@@ -213,9 +233,9 @@ void ListPreference::list(T &m)
 {
 	for (auto &it : m) {
 		if (isFile)
-			cout<<it.first<<": "<<it.second.str<<'\n';
+			cout<<it.first<<": "<<it.second.tr<<'\n';
 		else
-			cout<<it.first<<": "<<it.second.str<<": "<<it.second.value<<'\n';
+			cout<<it.first<<": "<<it.second.tr<<": "<<it.second.value<<'\n';
 	}
 }
 

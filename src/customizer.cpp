@@ -8,6 +8,7 @@
 #include <classes.hpp>
 #include <helpers.hpp>
 #include <SuperClass.hpp>
+#include <Wrapper.hpp>
 
 using namespace std;
 
@@ -15,6 +16,22 @@ static void _error(int val)
 {
 	fprintf(stderr,"Invalid value(%d), aborting...\n",val);
 }
+
+#define _TEMP_THRESOLD		1
+#define _VIBRATION_AMP	 	2
+#define _FAST_CHARGE 		3
+#define _TCP			4
+#define _FRANCO_SOUND		5
+#define _GPU_UP_THRESHOLD	6
+#define _GPU_DOWN_THRESHOLD	7
+#define _GPU_MAX_FREQ		8
+#define _HOTPLUG		9
+#define _GOVERNOR_CONTROL	10
+#define _CPU_FREQ_CONTROL	11
+#define _ECO_MODE		12
+#define _INTELLIPLUG		13
+#define _INTELLITHERMAL		14
+#define _DYNAMIC_FSYNC		15
 
 void tune(int p)
 {
@@ -30,15 +47,13 @@ void tune(int p)
  * 9 - Hotplug
  * 10 - Governor control
  * 11 - CPU Freq Control
- * 12 - Eco Mode
- * 13 - INTELLIPLUG
- * 14 - Intellithermal
- * 15 - Dyanimc FSYNC
- * 16 - FauxSound
+ * 12 - INTELLIPLUG
+ * 13 - Intellithermal
+ * 14 - Dyanimc FSYNC
+ * 15 - FauxSound
  */
 
 	int val;
-	unsigned int nr;
 	string content;
 	char c;
 
@@ -47,11 +62,11 @@ void tune(int p)
 		case 0:
 			return;
 
-		case 1:
+		case _TEMP_THRESOLD:
 		{
-			SingleBoxPreference threshold(TEMP_THRESHOLD);
+			SingleBoxPreference *threshold = *heap[_TEMP_THRESOLD].second;
 
-			fprintf(stdout, "Temp Threshold: %d\n", threshold.getValue());
+			fprintf(stdout, "Temp Threshold: %d\n", threshold->getValue());
 
 			fprintf(stdout,"New Value:");
 			fscanf(stdin,"%d",&val);
@@ -59,9 +74,9 @@ void tune(int p)
 			if (val<30 || val>150)
 				return _error(val);
 			else
-				 threshold.write(val);
+				 threshold->write(val);
 
-			fprintf(stdout, "Temp Threshold: %d\n", threshold.getValue());
+			fprintf(stdout, "Temp Threshold: %d\n", threshold->getValue());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
@@ -69,11 +84,11 @@ void tune(int p)
 			break;
 		}
 
-		case 2:
+		case _VIBRATION_AMP:
         	{
-		    	SingleBoxPreference vibrator(VIBRATION_AMP);
+			SingleBoxPreference *sbp = *heap[_VIBRATION_AMP].second;
 
-		    	fprintf(stdout, "Vibration Amp: %d\n", vibrator.getValue());
+		    	fprintf(stdout, "Vibration Amp: %d\n", sbp->getValue());
 
 			fprintf(stdout,"New Value:");
 			fscanf(stdin,"%d",&val);
@@ -81,26 +96,26 @@ void tune(int p)
 			if (val<0 || val>100)
 				return _error(val);
 			else
-				 vibrator.write(val);
-			fprintf(stdout, "Vibration Amp: %d\n", vibrator.getValue());
+				 sbp->write(val);
+			fprintf(stdout, "Vibration Amp: %d\n", sbp->getValue());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
 			break;
         	}
-		case 3:
+		case _FAST_CHARGE:
         	{
-			SingleBoxPreference fastCharge(FORCE_FAST_CHARGE,true);
+			SingleBoxPreference *fastCharge = *heap[_FAST_CHARGE].second;
 
-			fprintf(stdout,"Fast Charge is %s, switch ?(Y/N)\n", fastCharge.stat().c_str());
+			fprintf(stdout,"Fast Charge is %s, switch ?(Y/N)\n", fastCharge->stat().c_str());
 			cin.ignore();
 			cin>>c;
 
 			if(c == 'y' || c == 'Y')
-				 fastCharge.mSwitch();
+				 fastCharge->mSwitch();
 
-            		fprintf(stdout,"Fast Charge is %s\n", fastCharge.stat().c_str());
+            		fprintf(stdout,"Fast Charge is %s\n", fastCharge->stat().c_str());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
@@ -108,42 +123,41 @@ void tune(int p)
 			break;
         	}
 
-		case 4:
+		case _TCP:
 		{
-			ListPreference tcp(AVAILABLE_TCP_CONGESTION_ALGORITHM,
-						TCP_CONGESTION_ALGORITHM);
+			ListPreference *tcp = *heap[_TCP].second;
 			unsigned int position;
 
 			fprintf(stdout,"\nCurrent TCP Congestion Algorithm: %s\n", 
-									tcp.status().c_str());
+									tcp->status().c_str());
 			
 			fprintf(stdout, "Choose the new one:\n");
-			tcp.mOutput();
+			tcp->mOutput();
 			fscanf(stdin,"%u",&position);
 
-			if (!tcp.has(position))
+			if (!tcp->has(position))
 				return _error(position);
 
-			tcp.mChange(position);
+			tcp->mChange(position);
 
 			fprintf(stdout,"Current TCP Congestion Algorithm: %s\n", 
-									tcp.status().c_str());
+									tcp->status().c_str());
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
 			break;
 		}
-		case 5:
+		case _FRANCO_SOUND:
 		{
-			ListPreference francoSound(SOUND_CONTROL_PATH);
+			ListPreference *francoSound = *heap[_FRANCO_SOUND].second;
 			unsigned int position;
 			fprintf(stdout,"\n");
-			francoSound.mOutput();
+			francoSound->mOutput();
 
 			fprintf(stdout,"\nInterface number: ");
 			fscanf(stdin,"%u",&position);
 
-			if (!francoSound.has(position))
+			if (!francoSound->has(position))
 				return _error(position);
 
 			fprintf(stdout,"New Value: ");
@@ -153,18 +167,18 @@ void tune(int p)
 			if (val<0 || val>20)
 				return _error(val);
 			else
-				francoSound.mChangeByValue(position,val);
+				francoSound->mChangeByValue(position,val);
 
 			fprintf(stdout,"Values applied successfully\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
 			break;
 		}
-		case 6:
+		case _GPU_UP_THRESHOLD:
         	{
-            		SingleBoxPreference gpuUp(GPU_UP_THRESHOLD);
+            		SingleBoxPreference *gpuUp = *heap[_GPU_UP_THRESHOLD].second;
 
-            		fprintf(stdout, "GPU Up Threshold: %d\n", gpuUp.getValue());
+            		fprintf(stdout, "GPU Up Threshold: %d\n", gpuUp->getValue());
 
 			fprintf(stdout,"New Value:");
 			fscanf(stdin,"%d",&val);
@@ -172,19 +186,19 @@ void tune(int p)
 			if (val<0 || val>100)
 				return _error(val);
 			else
-				 gpuUp.write(val);
-			fprintf(stdout, "GPU Up Threshold: %d\n", gpuUp.getValue());
+				 gpuUp->write(val);
+			fprintf(stdout, "GPU Up Threshold: %d\n", gpuUp->getValue());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
 			getline(cin,s);
 			break;
         	}
-		case 7:
+		case _GPU_DOWN_THRESHOLD:
         	{
-            		SingleBoxPreference gpuDown(GPU_DOWN_THRESHOLD);
+            		SingleBoxPreference *gpuDown = *heap[_GPU_DOWN_THRESHOLD].second;
 
-            		fprintf(stdout, "GPU Down Threshold: %d\n", gpuDown.getValue());
+            		fprintf(stdout, "GPU Down Threshold: %d\n", gpuDown->getValue());
 
 			fprintf(stdout,"New Value:");
 			fscanf(stdin,"%d",&val);
@@ -192,8 +206,8 @@ void tune(int p)
 			if (val<0 || val>100)
 				return _error(val);
 			else
-				 gpuDown.write(val);
-			fprintf(stdout, "GPU Down Threshold: %d\n", gpuDown.getValue());
+				 gpuDown->write(val);
+			fprintf(stdout, "GPU Down Threshold: %d\n", gpuDown->getValue());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
@@ -201,24 +215,24 @@ void tune(int p)
 			break;
         	}
 
-		case 8:
+		case _GPU_MAX_FREQ:
 		{
+			ListPreference *gpuOC = *heap[_GPU_MAX_FREQ].second;
 			unsigned int position;
-			ListPreference gpuOC(GPU_AVAILABLE_FREQ,GPU_MAX_FREQ);
-			fprintf(stdout,"Current Max GPU Freq: %s\n",gpuOC.status().c_str());
+			fprintf(stdout,"Current Max GPU Freq: %s\n",gpuOC->status().c_str());
 
 			fprintf(stdout,"Choose new MAX GPU Freq value:\n");
-			gpuOC.mOutput();
+			gpuOC->mOutput();
 			
 			cin.ignore();
 			fscanf(stdin,"%u",&position);
 
-			if(gpuOC.has(position))
-				gpuOC.mChange(position);
+			if(gpuOC->has(position))
+				gpuOC->mChange(position);
 			else
 				return _error(position);
 
-			fprintf(stdout,"Current Max GPU Freq: %s\n",gpuOC.status().c_str());
+			fprintf(stdout,"Current Max GPU Freq: %s\n",gpuOC->status().c_str());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
@@ -226,24 +240,24 @@ void tune(int p)
 			break;
 		}
 
-		case 9:
+		case _HOTPLUG:
 		{
+			ListPreference *hotplug = *heap[_HOTPLUG].second;
 			unsigned int position;
-			ListPreference hotplug(HOTPLUG_PATH);
 
-			hotplug.mOutput();
+			hotplug->mOutput();
 			
 			fprintf(stdout,"\nChoose Interface number: ");
 			cin.ignore();
 			fscanf(stdin,"%d",&position);
 
-			if(!hotplug.has(position))
+			if(!hotplug->has(position))
 				return _error(position);
 
 			fprintf(stdout,"New Value:");
 			fscanf(stdin,"%d",&val);
 			
-			hotplug.mChangeByValue(position,val);
+			hotplug->mChangeByValue(position,val);
 
 			fprintf(stdout,"Values applied successfully\nPress enter to continue");
 			cin.ignore();
@@ -251,24 +265,24 @@ void tune(int p)
 			break;
 		}
 
-		case 10:
+		case _GOVERNOR_CONTROL:
 		{
+			ListPreference *cpuGov = *heap[_GOVERNOR_CONTROL].second;
 			unsigned int position;
-			ListPreference cpuGov(SCALING_AVAILABLE_GOVS,CURRENT_CPU_GOV);
-			fprintf(stdout,"Current CPU Governor: %s\n",cpuGov.status().c_str());
+			fprintf(stdout,"Current CPU Governor: %s\n",cpuGov->status().c_str());
 
-			cpuGov.mOutput();
+			cpuGov->mOutput();
 
 			fprintf(stdout,"Choose new governor number: ");
 			cin.ignore();
 			fscanf(stdin,"%d",&position);
 
-			if(cpuGov.has(position))
-					cpuGov.mChange(position);
+			if(cpuGov->has(position))
+					cpuGov->mChange(position);
 			else
 				return _error(position);
 
-			fprintf(stdout,"Current CPU Governor: %s\n",cpuGov.status().c_str());
+			fprintf(stdout,"Current CPU Governor: %s\n",cpuGov->status().c_str());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
@@ -276,7 +290,7 @@ void tune(int p)
 			break;
 		}
 
-		case 11:
+		/*case _CPU_FREQ_CONTROL:
 		{
 			unsigned int position;
 
@@ -331,43 +345,22 @@ void tune(int p)
 			cin.ignore();
 			getline(cin,s);
 			break;
-		}
+		}*/
 
-		case 12:
+		case _INTELLIPLUG:
 		{
-			SingleBoxPreference ecoMode(ECO_MODE,true);
-			fprintf(stdout,"Eco Mode is %s, switch?(y/n): ",
-						ecoMode.stat().c_str());
-
-			cin.ignore();
-			fscanf(stdin," %c",&c);
-
-			if(c == 'y' || c == 'Y')
-				ecoMode.mSwitch();
-
-			fprintf(stdout,"Eco Mode is %s\n",
-						ecoMode.stat().c_str());
-
-			fprintf(stdout,"\nPress enter to continue");
-			cin.ignore();
-			getline(cin,s);
-			break;
-		}
-
-		case 13:
-		{
-			SingleBoxPreference intelliPlug(INTELLIPLUG,true);
+			SingleBoxPreference *intelliPlug = *heap[_INTELLIPLUG].second;
 			fprintf(stdout,"Intelliplug is %s, switch?(y/n): ",
-						intelliPlug.stat().c_str());
+						intelliPlug->stat().c_str());
 
 			cin.ignore();
 			fscanf(stdin," %c",&c);
 
 			if(c == 'y' || c == 'Y')
-				intelliPlug.mSwitch();
+				intelliPlug->mSwitch();
 
 			fprintf(stdout,"Intelliplug is %s\n",
-						intelliPlug.stat().c_str());
+						intelliPlug->stat().c_str());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
@@ -375,19 +368,19 @@ void tune(int p)
 			break;
 		}
 
-		case 14:
+		case _INTELLITHERMAL:
 		{
-			SingleBoxPreference intelliThermal(INTELLITHERMAL);
+			SingleBoxPreference *intelliThermal = *heap[_INTELLITHERMAL].second;
 			fprintf(stdout,"Intellithermal is %s, switch?(y/n): ",
-						intelliThermal.stat().c_str());
+						intelliThermal->stat().c_str());
 
 			cin.ignore();
 			fscanf(stdin," %c",&c);
 
 			if(c == 'y' || c == 'Y')
-				intelliThermal.mSwitch();
+				intelliThermal->mSwitch();
 
-			fprintf(stdout,"Intellithermal is %s\n", intelliThermal.stat().c_str());
+			fprintf(stdout,"Intellithermal is %s\n", intelliThermal->stat().c_str());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();
@@ -395,18 +388,18 @@ void tune(int p)
 			break;
 		}
 
-		case 15:
+		case _DYNAMIC_FSYNC:
 		{
-			SingleBoxPreference dynamicFsync(DYN_FSYNC);
-			fprintf(stdout,"Dynamic Fsync is %s, switch?(y/n): ",dynamicFsync.stat().c_str());
+			SingleBoxPreference *dynamicFsync = *heap[_DYNAMIC_FSYNC].second;
+			fprintf(stdout,"Dynamic Fsync is %s, switch?(y/n): ",dynamicFsync->stat().c_str());
 
 			cin.ignore();
 			fscanf(stdin," %c",&c);
 
 			if(c == 'y' || c == 'Y')
-				dynamicFsync.mSwitch();
+				dynamicFsync->mSwitch();
 
-			fprintf(stdout,"Dynamic Fsync is %s\n", dynamicFsync.stat().c_str());
+			fprintf(stdout,"Dynamic Fsync is %s\n", dynamicFsync->stat().c_str());
 
 			fprintf(stdout,"\nPress enter to continue");
 			cin.ignore();

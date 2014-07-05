@@ -1,3 +1,6 @@
+#ifndef SUPERCLASS_HPP
+#define SUPERCLASS_HPP
+
 #include <string>
 #include <cstring>
 #include <fstream>
@@ -9,21 +12,22 @@ using namespace std;
 
 struct mapped
 {
-	string str;
+	string tr;
 	int value;
 };
 
 class SingleBoxPreference {
 
 	private:
+		string path;
 		int val;
 		char *status;
 		bool on,isChar,isBool;
-		string path;
 		void init();
 
 	public:
 		SingleBoxPreference(string path, bool isBool=false);
+		SingleBoxPreference(SingleBoxPreference &obj);
 		void mSwitch();
 		void write(int nVal);
 		int getValue();
@@ -47,6 +51,8 @@ class ListPreference {
 		ListPreference(string readPath, string writePath);
 		ListPreference(string readPath);
 
+		ListPreference(ListPreference &obj);
+
 		void mOutput();
 		void mChange(unsigned position);
 		void mChangeByValue(unsigned position, int val);
@@ -58,3 +64,5 @@ class ListPreference {
 
 		static int get_int(const char *path);
 };
+
+#endif //SUPERCLASS_HPP
